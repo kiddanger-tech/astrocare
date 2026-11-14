@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#0d1117">
+<title>AstroCare 360 | Astronaut Health & Mission Support</title>
+<style>
+:root{
+  --bg:#0d1117;--panel:#161b22;--panel2:#1c2430;--line:#293544;
+  --blue:#38bdf8;--cyan:#06b6d4;--green:#10b981;--amber:#f59e0b;
+  --red:#ef4444;--purple:#8b5cf6;--text:#f3f4f6;--muted:#9ca3af;
+  --radius:16px;--shadow:0 12px 35px rgba(0,0,0,.18)
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,Segoe UI,Arial,sans-serif}
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+.app{min-height:100vh;display:grid;grid-template-columns:255px 1fr}
+.sidebar{background:#10161e;border-right:1px solid var(--line);padding:22px 15px;display:flex;flex-direction:column;gap:22px}
+.brand{display:flex;align-items:center;gap:11px;padding:5px 9px}
+.brand-mark{width:39px;height:39px;border-radius:12px;background:linear-gradient(135deg,#0284c7,#06b6d4);display:grid;place-items:center;font-size:21px;font-weight:800}
+.brand strong{display:block;font-size:15px;letter-spacing:.4px}.brand small{color:var(--muted);font-size:11px}
+.nav-label{color:#64748b;font-size:10px;font-weight:800;letter-spacing:1.5px;padding:0 11px;margin:3px 0}
+nav{display:grid;gap:5px}
+.nav-btn{width:100%;display:flex;align-items:center;gap:12px;padding:11px 12px;border:0;border-radius:10px;background:transparent;color:#aeb9c8;text-align:left;font-size:13px}
+.nav-btn span:first-child{width:20px;text-align:center;font-size:16px}
+.nav-btn:hover,.nav-btn.active{background:#1c2b3b;color:#eaf7ff}
+.nav-btn.active{box-shadow:inset 3px 0 var(--blue)}
+.sidebar-bottom{margin-top:auto}
+.profile-mini{display:flex;align-items:center;gap:10px;padding:12px;border:1px solid var(--line);border-radius:13px;background:#141d28;cursor:pointer}
+.avatar{width:37px;height:37px;border-radius:50%;background:#26394c;display:grid;place-items:center;overflow:hidden;color:#c7eaff;font-weight:700;flex:none}
+.avatar img{width:100%;height:100%;object-fit:cover}
+.profile-mini strong{font-size:12px;display:block}.profile-mini small{font-size:10px;color:var(--muted)}
+.main{min-width:0}
+.topbar{height:72px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 30px;position:sticky;top:0;background:rgba(13,17,23,.94);backdrop-filter:blur(10px);z-index:5}
+.breadcrumb{font-size:13px;color:var(--muted)}.breadcrumb strong{color:var(--text)}
+.top-actions{display:flex;align-items:center;gap:12px}
+.status{font-size:11px;color:#9ee8cc;background:#123329;border:1px solid #1e5947;padding:7px 10px;border-radius:30px}
+.utc{font-family:monospace;color:var(--muted);font-size:12px}
+.content{padding:28px 30px 50px;max-width:1500px;margin:auto}
+.page{display:none}.page.active{display:block}
+.page-head{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;margin-bottom:24px}
+.eyebrow{color:var(--blue);font-size:10px;letter-spacing:1.6px;font-weight:800;text-transform:uppercase}
+h1{font-size:27px;margin:7px 0 6px;letter-spacing:-.5px}h2{font-size:17px;margin:0 0 15px}h3{font-size:14px;margin:0 0 9px}
+.sub{color:var(--muted);font-size:13px;line-height:1.6;margin:0}
+.btn{border:1px solid var(--line);background:#202b38;color:var(--text);padding:10px 14px;border-radius:10px;font-size:12px;font-weight:650}
+.btn:hover{border-color:#4b7897;background:#24384a}
+.btn.primary{background:#087fb5;border-color:#087fb5;color:white}.btn.primary:hover{background:#0796d2}
+.btn.danger{background:#3a2024;border-color:#69343c;color:#ffb7bd}
+.grid{display:grid;gap:16px}.grid.four{grid-template-columns:repeat(4,minmax(0,1fr))}.grid.three{grid-template-columns:repeat(3,minmax(0,1fr))}.grid.two{grid-template-columns:repeat(2,minmax(0,1fr))}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:18px;box-shadow:var(--shadow);min-width:0}
+.metric-top{display:flex;justify-content:space-between;align-items:center;color:var(--muted);font-size:11px}
+.metric-icon{width:33px;height:33px;border-radius:10px;display:grid;place-items:center;background:#17364a;color:var(--blue);font-size:16px}
+.metric-value{font-size:27px;font-weight:750;margin:14px 0 4px;letter-spacing:-.5px}.metric-foot{font-size:10px;color:var(--muted)}
+.tag{display:inline-flex;align-items:center;gap:5px;padding:5px 8px;border-radius:20px;font-size:10px;background:#202b38;color:#b9c7d7}
+.tag.green{background:#123329;color:#8be0bd}.tag.amber{background:#3a2d17;color:#f6cb78}.tag.red{background:#3b2024;color:#ffadb5}.tag.blue{background:#153448;color:#8bdcff}
+.dot{width:6px;height:6px;border-radius:50%;background:currentColor}
+.section-row{display:flex;justify-content:space-between;align-items:center;margin:24px 0 13px}
+.list{display:grid;gap:10px}.list-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 0;border-bottom:1px solid #26313e}.list-row:last-child{border:0}
+.muted{color:var(--muted)}.small{font-size:11px}.table-wrap{overflow:auto}
+table{width:100%;border-collapse:collapse;font-size:12px}th{text-align:left;color:var(--muted);font-weight:600;padding:11px;border-bottom:1px solid var(--line)}td{padding:13px 11px;border-bottom:1px solid #25303c}tr:last-child td{border:0}
+input,select,textarea{width:100%;background:#0f151d;border:1px solid #344252;border-radius:9px;color:var(--text);padding:11px 12px;outline:none;font-size:12px}
+input:focus,select:focus,textarea:focus{border-color:var(--blue);box-shadow:0 0 0 3px #38bdf81a}
+label{display:block;color:#b8c5d4;font-size:11px;margin:0 0 7px}
+.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.field{margin-bottom:13px}.field.full{grid-column:1/-1}
+.search{max-width:580px;position:relative}.search input{padding-left:38px}.search:before{content:"⌕";position:absolute;left:13px;top:7px;font-size:22px;color:var(--muted)}
+.notice{padding:13px 15px;border:1px solid #5a4724;background:#2b2417;color:#f5d79c;border-radius:12px;font-size:11px;line-height:1.6}
+.anatomy{display:grid;grid-template-columns:260px 1fr;gap:18px}
+.body-map{min-height:420px;display:grid;place-items:center;background:radial-gradient(ellipse at center,#1d3447 0,#111a25 65%);border:1px solid var(--line);border-radius:15px;padding:18px}
+.figure{width:190px;height:365px;position:relative;display:flex;align-items:center;flex-direction:column}
+.head{width:54px;height:62px;border:2px solid #76b9d6;border-radius:48% 48% 44% 44%;background:#25445a}
+.neck{width:23px;height:18px;background:#25445a;border-left:2px solid #76b9d6;border-right:2px solid #76b9d6}
+.torso{width:104px;height:137px;background:#25445a;border:2px solid #76b9d6;border-radius:35px 35px 22px 22px;position:relative}
+.arm{position:absolute;top:10px;width:27px;height:130px;border:2px solid #76b9d6;background:#25445a;border-radius:20px}
+.arm.left{left:-34px;transform:rotate(9deg)}.arm.right{right:-34px;transform:rotate(-9deg)}
+.leg{position:absolute;top:125px;width:38px;height:115px;border:2px solid #76b9d6;background:#25445a;border-radius:16px}
+.leg.left{left:10px}.leg.right{right:10px}
+.organ{position:absolute;border:0;border-radius:50%;background:#38bdf8;box-shadow:0 0 12px #38bdf899;cursor:pointer}
+.organ.heart{width:17px;height:17px;top:36px;left:28px;background:#ef737b}.organ.lungs{width:38px;height:29px;top:39px;left:32px;background:#38bdf8;opacity:.65;border-radius:10px}
+.organ.brain{width:23px;height:20px;top:18px;background:#b19aff}.organ.stomach{width:23px;height:27px;top:80px;left:42px;background:#f4b85d}
+.organ:hover{outline:3px solid #ffffff55}
+.organ-label{font-size:10px;color:#b8c7d8;margin-top:10px}
+.body-buttons{display:flex;flex-wrap:wrap;gap:8px;margin-top:13px}
+.body-buttons button{font-size:10px}
+.term-card{padding:15px;border:1px solid var(--line);border-radius:12px;background:#121a24}
+.term-card h3{color:#d9f3ff}.term-card p{font-size:12px;line-height:1.65;color:#b9c5d2}
+.chat-layout{display:grid;grid-template-columns:270px 1fr;min-height:490px;overflow:hidden}
+.chat-list{border-right:1px solid var(--line);padding-right:15px}.chat-window{padding-left:18px;display:flex;flex-direction:column;min-width:0}
+.messages{flex:1;display:flex;flex-direction:column;gap:12px;padding:15px 0;max-height:350px;overflow:auto}
+.message{max-width:78%;padding:11px 13px;border-radius:13px;background:#202c39;font-size:12px;line-height:1.5}.message.mine{align-self:flex-end;background:#075b86}.message small{display:block;color:#b8c6d3;margin-top:5px;font-size:9px}
+.chat-compose{display:flex;gap:8px;border-top:1px solid var(--line);padding-top:13px}.chat-compose input{flex:1}
+.profile-large{display:flex;align-items:center;gap:18px;margin-bottom:20px}.avatar.big{width:88px;height:88px;font-size:25px}
+.crew-card{display:flex;gap:12px;align-items:center}.crew-card .info{flex:1;min-width:0}.crew-card strong{display:block;font-size:13px}.crew-card small{color:var(--muted);font-size:10px}
+.empty{padding:28px;text-align:center;color:var(--muted);font-size:12px}
+footer{text-align:center;color:#64748b;font-size:10px;padding:25px}
+.toast{position:fixed;right:22px;bottom:22px;background:#123329;border:1px solid #1e5947;color:#b7f4d9;padding:12px 16px;border-radius:11px;font-size:12px;display:none;z-index:20}
+@media(max-width:1050px){.grid.four{grid-template-columns:repeat(2,1fr)}.grid.three{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:760px){
+ .app{grid-template-columns:1fr}.sidebar{position:sticky;top:0;z-index:8;padding:10px 12px;border-right:0;border-bottom:1px solid var(--line);gap:9px}
+ .brand{padding:2px 5px}.brand-mark{width:32px;height:32px}.sidebar nav{display:flex;overflow-x:auto;padding-bottom:3px}.nav-label,.sidebar-bottom{display:none}
+ .nav-btn{width:auto;white-space:nowrap;padding:9px 11px;font-size:11px}.nav-btn span:first-child{width:auto}
+ .topbar{height:54px;padding:0 16px}.content{padding:22px 15px 35px}h1{font-size:23px}
+ .grid.four,.grid.three,.grid.two{grid-template-columns:1fr 1fr}.anatomy{grid-template-columns:1fr}.body-map{min-height:380px}
+ .chat-layout{grid-template-columns:1fr}.chat-list{border-right:0;border-bottom:1px solid var(--line);padding:0 0 12px}.chat-window{padding:12px 0 0}
+}
+@media(max-width:480px){.grid.four,.grid.three,.grid.two,.form-grid{grid-template-columns:1fr}.page-head{flex-direction:column}.top-actions .utc{display:none}.metric-value{font-size:23px}}
+</style>
+</head>
+<body>
+<div class="app">
+<aside class="sidebar">
+  <div class="brand"><div class="brand-mark">✦</div><div><strong>ASTROCARE 360</strong><small>SPACE HEALTH SYSTEM</small></div></div>
+  <div>
+    <div class="nav-label">MISSION WORKSPACE</div>
+    <nav id="mainNav">
+      <button class="nav-btn active" data-page="overview"><span>▦</span>Overview</button>
+      <button class="nav-btn" data-page="body"><span>♧</span>Body Monitoring</button>
+      <button class="nav-btn" data-page="triage"><span>✚</span>Medical Triage</button>
+      <button class="nav-btn" data-page="vitals"><span>⌁</span>Vital Signs</button>
+      <button class="nav-btn" data-page="hazards"><span>◈</span>Space Health Risks</button>
+      <button class="nav-btn" data-page="library"><span>▤</span>Medical Library</button>
+      <button class="nav-btn" data-page="chat"><span>◎</span>Earth Connection</button>
+      <button class="nav-btn" data-page="crew"><span>♙</span>Crew Management</button>
+      <button class="nav-btn" data-page="wellness"><span>♡</span>Crew Wellness</button>
+      <button class="nav-btn" data-page="inventory"><span>▣</span>Medical Inventory</button>
+      <button class="nav-btn" data-page="reports"><span>▥</span>Mission Reports</button>
+    </nav>
+  </div>
+  <div class="sidebar-bottom">
+    <div class="nav-label">ACCOUNT</div>
+    <button class="nav-btn" data-page="profile"><span>⚙</span>My Profile & Settings</button>
+    <div class="profile-mini" id="miniProfile" data-open-profile>
+      <div class="avatar" id="miniAvatar">A1</div>
+      <div><strong id="miniName">Alex Morgan</strong><small>Mission Specialist</small></div>
+      <span style="margin-left:auto;color:#7f91a4">›</span>
+    </div>
+  </div>
+</aside>
+
+<main class="main">
+<header class="topbar">
+  <div class="breadcrumb">ASTROCARE <span style="color:#506174">/</span> <strong id="pageCrumb">Overview</strong></div>
+  <div class="top-actions"><span class="status"><span class="dot"></span> DEMO SYSTEM</span><span class="utc" id="clock">--:--:-- UTC</span></div>
+</header>
+
+<div class="content">
+<section class="page active" id="overview">
+  <div class="page-head"><div><div class="eyebrow">MISSION CONTROL / HEALTH</div><h1>Mission Overview</h1><p class="sub">A central view of crew health, medical activity and spacecraft environment.</p></div><span class="tag blue">SIMULATED MISSION DATA</span></div>
+  <div class="notice">Prototype mode: all health readings and mission events on this page are simulated examples. They are not connected to medical sensors or a clinical service.</div>
+  <div class="grid four" style="margin-top:16px">
+    <div class="card"><div class="metric-top">Heart rate <span class="metric-icon">♡</span></div><div class="metric-value">76 <span style="font-size:13px;color:var(--muted)">BPM</span></div><div class="metric-foot"><span class="tag green">Simulated</span> Example reading</div></div>
+    <div class="card"><div class="metric-top">Oxygen saturation <span class="metric-icon">◉</span></div><div class="metric-value">98<span style="font-size:13px;color:var(--muted)">%</span></div><div class="metric-foot"><span class="tag green">Simulated</span> Example reading</div></div>
+    <div class="card"><div class="metric-top">Body temperature <span class="metric-icon">♨</span></div><div class="metric-value">36.8<span style="font-size:13px;color:var(--muted)">°C</span></div><div class="metric-foot"><span class="tag green">Simulated</span> Example reading</div></div>
+    <div class="card"><div class="metric-top">Open medical requests <span class="metric-icon">✚</span></div><div class="metric-value">02</div><div class="metric-foot">Demo requests awaiting review</div></div>
+  </div>
+  <div class="grid two" style="margin-top:17px">
+    <div class="card"><div class="section-row" style="margin:0 0 10px"><h2>Mission status</h2><span class="tag green">Nominal · Demo</span></div><div class="list">
+      <div class="list-row"><span class="muted small">Mission</span><strong class="small">Deep Space Simulation</strong></div>
+      <div class="list-row"><span class="muted small">Mission day</span><strong class="small">Day 014</strong></div>
+      <div class="list-row"><span class="muted small">Crew members</span><strong class="small" id="crewCount">3 registered</strong></div>
+      <div class="list-row"><span class="muted small">Earth connection</span><span class="tag amber">Demo connection</span></div>
+    </div></div>
+    <div class="card"><div class="section-row" style="margin:0 0 10px"><h2>Recent activity</h2><span class="tag blue">Demo</span></div><div class="list">
+      <div class="list-row"><div><strong class="small">Daily wellness check-in</strong><div class="muted small">Crew Member 002</div></div><span class="muted small">09:15</span></div>
+      <div class="list-row"><div><strong class="small">Health report updated</strong><div class="muted small">Crew Member 001</div></div><span class="muted small">08:42</span></div>
+      <div class="list-row"><div><strong class="small">Medical library viewed</strong><div class="muted small">Respiratory health</div></div><span class="muted small">Yesterday</span></div>
+    </div></div>
+  </div>
+  <div class="section-row"><h2>Quick access</h2></div>
+  <div class="grid three">
+    <button class="card" style="text-align:left;color:var(--text)" onclick="showPage('library')"><h3>▤ Medical Library</h3><p class="sub">Search medical terms in simple language.</p></button>
+    <button class="card" style="text-align:left;color:var(--text)" onclick="showPage('chat')"><h3>◎ Earth Medical Connection</h3><p class="sub">Open the prototype doctor messaging area.</p></button>
+    <button class="card" style="text-align:left;color:var(--text)" onclick="showPage('crew')"><h3>♙ Crew Management</h3><p class="sub">View and add demo crew profiles.</p></button>
+  </div>
+</section>
+
+<section class="page" id="body">
+  <div class="page-head"><div><div class="eyebrow">ANATOMY / EXPLORER</div><h1>Interactive Body Monitoring</h1><p class="sub">Select a body system to see what can be assessed and which measurements may be relevant.</p></div></div>
+  <div class="anatomy">
+    <div class="body-map"><div><div class="figure"><div class="head"></div><div class="neck"></div><div class="torso"><button class="organ lungs" title="Respiratory system" onclick="selectBody('Respiratory system')"></button><button class="organ heart" title="Cardiovascular system" onclick="selectBody('Cardiovascular system')"></button><button class="organ stomach" title="Digestive system" onclick="selectBody('Digestive system')"></button><div class="arm left"></div><div class="arm right"></div><div class="leg left"></div><div class="leg right"></div></div></div><div class="organ-label">SELECT A BODY SYSTEM</div></div></div>
+    <div class="card"><div class="eyebrow">SELECTED SYSTEM</div><h2 id="bodyTitle" style="margin-top:8px">Cardiovascular system</h2><p class="sub" id="bodyDesc">The heart and blood vessels move blood around the body, delivering oxygen and nutrients to tissues.</p>
+      <div class="section-row"><h3>Relevant assessments</h3></div><div class="list" id="bodyDetails"></div>
+      <div class="body-buttons">
+        <button class="btn" onclick="selectBody('Cardiovascular system')">Heart</button><button class="btn" onclick="selectBody('Respiratory system')">Lungs</button><button class="btn" onclick="selectBody('Nervous system')">Brain & nerves</button><button class="btn" onclick="selectBody('Musculoskeletal system')">Bones & muscles</button><button class="btn" onclick="selectBody('Digestive system')">Digestive</button><button class="btn" onclick="selectBody('Urinary system')">Urinary</button><button class="btn" onclick="selectBody('Skin and temperature')">Skin</button>
+      </div>
+      <p class="muted small" style="margin-top:16px">This is an educational body-system selector, not a diagnostic anatomical scan. Measurements require suitable validated equipment.</p>
+    </div>
+  </div>
+</section>
+
+<section class="page" id="triage">
+  <div class="page-head"><div><div class="eyebrow">MEDICAL SUPPORT</div><h1>Medical Triage Request</h1><p class="sub">Record a concern and prepare it for review by the authorised medical team.</p></div></div>
+  <div class="notice">This prototype does not diagnose or determine clinical urgency. Follow mission emergency procedures immediately if someone may be in danger; do not wait for a website response.</div>
+  <div class="card" style="margin-top:16px;max-width:800px">
+    <form id="triageForm">
+      <div class="form-grid">
+        <div class="field"><label>Person reporting</label><select id="triagePerson"></select></div>
+        <div class="field"><label>Concern category</label><select id="triageCategory"><option>General health concern</option><option>Breathing or respiratory concern</option><option>Heart or circulation concern</option><option>Vision or neurological concern</option><option>Injury or pain</option><option>Sleep or fatigue</option><option>Other</option></select></div>
+        <div class="field"><label>When did it begin?</label><select><option>Just now</option><option>Within the last few hours</option><option>Today</option><option>Several days ago</option></select></div>
+        <div class="field"><label>Preferred contact</label><select><option>Earth medical team</option><option>Mission medical officer</option></select></div>
+        <div class="field full"><label>Describe the concern</label><textarea id="triageText" rows="5" placeholder="Describe what happened, when it began, and any relevant details..."></textarea></div>
+      </div>
+      <button class="btn primary" type="submit">Prepare medical request</button>
+    </form>
+    <div id="triageResult" class="small muted" style="margin-top:12px"></div>
+  </div>
+</section>
+
+<section class="page" id="vitals">
+  <div class="page-head"><div><div class="eyebrow">HEALTH DATA</div><h1>Vital Signs & Analytics</h1><p class="sub">View example readings and their data sources.</p></div><span class="tag amber">SIMULATED DATA</span></div>
+  <div class="grid four">
+    <div class="card"><div class="metric-top">Heart rate</div><div class="metric-value">76 <small>BPM</small></div><span class="tag blue">Demo value</span></div>
+    <div class="card"><div class="metric-top">Blood pressure</div><div class="metric-value">118/78</div><span class="tag blue">Demo value · mmHg</span></div>
+    <div class="card"><div class="metric-top">SpO₂</div><div class="metric-value">98%</div><span class="tag blue">Demo value</span></div>
+    <div class="card"><div class="metric-top">Temperature</div><div class="metric-value">36.8°C</div><span class="tag blue">Demo value</span></div>
+  </div>
+  <div class="card" style="margin-top:17px"><h2>Measurement source labels</h2><div class="list"><div class="list-row"><span>Simulated</span><span class="tag amber">Generated for demonstration</span></div><div class="list-row"><span>Manual entry</span><span class="tag blue">Entered by an authorised user</span></div><div class="list-row"><span>Sensor reading</span><span class="tag green">Received from connected hardware</span></div></div><p class="sub" style="margin-top:12px">A real sensor connection will be added later. The website must show timestamps, device identity and signal-quality information when real data is available.</p></div>
+</section>
+
+<section class="page" id="hazards">
+  <div class="page-head"><div><div class="eyebrow">SPACE ENVIRONMENT</div><h1>Space Health Risks</h1><p class="sub">A future module for environmental and spaceflight health monitoring.</p></div></div>
+  <div class="grid three">
+    <div class="card"><div class="metric-icon">☼</div><h3 style="margin-top:13px">Radiation exposure</h3><p class="sub">Record radiation measurements and cumulative exposure from an appropriate dosimeter.</p><span class="tag amber">Awaiting sensor integration</span></div>
+    <div class="card"><div class="metric-icon">◌</div><h3 style="margin-top:13px">Microgravity health</h3><p class="sub">Track exercise, mobility, muscle function and bone-health assessment records.</p><span class="tag blue">Manual / assessment data</span></div>
+    <div class="card"><div class="metric-icon">◉</div><h3 style="margin-top:13px">Vision & SANS</h3><p class="sub">Record vision symptoms and clinician-led eye assessment results.</p><span class="tag blue">Clinical assessment needed</span></div>
+    <div class="card"><div class="metric-icon">CO₂</div><h3 style="margin-top:13px">Cabin air</h3><p class="sub">Potential integration for carbon dioxide, oxygen and cabin pressure sensors.</p><span class="tag amber">Not connected</span></div>
+    <div class="card"><div class="metric-icon">♨</div><h3 style="margin-top:13px">Temperature & humidity</h3><p class="sub">Track habitat environmental conditions using suitable instruments.</p><span class="tag amber">Not connected</span></div>
+    <div class="card"><div class="metric-icon">◷</div><h3 style="margin-top:13px">Circadian environment</h3><p class="sub">Review light exposure, sleep schedules and planned rest periods.</p><span class="tag blue">Planned module</span></div>
+  </div>
+</section>
+
+<section class="page" id="library">
+  <div class="page-head"><div><div class="eyebrow">KNOWLEDGE CENTRE</div><h1>Medical Library</h1><p class="sub">Search simple explanations of medical terms, body systems and space medicine concepts.</p></div><span class="tag green">LOCAL DEMO LIBRARY</span></div>
+  <div class="search"><input id="librarySearch" placeholder="Search a medical term, condition or body system..."></div>
+  <div class="section-row"><h2>Browse categories</h2></div>
+  <div class="body-buttons" style="margin:0 0 18px"><button class="btn" onclick="filterLibrary('All')">All</button><button class="btn" onclick="filterLibrary('Cardiovascular')">Cardiovascular</button><button class="btn" onclick="filterLibrary('Respiratory')">Respiratory</button><button class="btn" onclick="filterLibrary('Space medicine')">Space medicine</button><button class="btn" onclick="filterLibrary('Neurology')">Neurology</button></div>
+  <div class="grid two" id="libraryResults"></div>
+  <p class="muted small" style="margin-top:15px">Educational prototype content only. Before operational use, medical entries must be reviewed, referenced, versioned and approved by qualified professionals.</p>
+</section>
+
+<section class="page" id="chat">
+  <div class="page-head"><div><div class="eyebrow">EARTH MEDICAL CONNECTION</div><h1>Medical Communication</h1><p class="sub">Prototype messaging between the astronaut portal and a future doctor portal.</p></div><span class="tag amber">LOCAL DEMO · NOT LIVE</span></div>
+  <div class="notice">Messages in this demonstration stay in this browser session. No doctor receives them yet. The production version will route messages through a secured backend and support delayed delivery when a connection is unavailable.</div>
+  <div class="card chat-layout" style="margin-top:16px">
+    <div class="chat-list"><h3>Conversations</h3><div class="list-row" style="cursor:pointer"><div><strong class="small">Earth Medical Team</strong><div class="muted small">Mission medical support</div></div><span class="tag green">Demo</span></div><div class="list-row"><div><strong class="small">Mission Medical Officer</strong><div class="muted small">On-board support</div></div><span class="tag blue">Local</span></div><p class="muted small" style="margin-top:15px">Delivery states planned: queued, sent, delivered, read and failed.</p></div>
+    <div class="chat-window"><div><h3>Earth Medical Team</h3><span class="muted small">Secure channel planned · Demo conversation</span></div><div class="messages" id="messages"><div class="message">Hello, Earth Medical Team. This is a sample conversation in the AstroCare prototype.<small>Demo message · 09:10</small></div><div class="message mine">Message received in the local demonstration interface. A live backend connection is not configured yet.<small>Demo reply · 09:12</small></div></div><form class="chat-compose" id="chatForm"><input id="chatInput" placeholder="Write a message..." autocomplete="off"><button class="btn primary">Send</button></form></div>
+  </div>
+</section>
+
+<section class="page" id="crew">
+  <div class="page-head"><div><div class="eyebrow">MISSION PERSONNEL</div><h1>Crew Management</h1><p class="sub">View the demonstration crew and add crew profile cards.</p></div><button class="btn primary" onclick="openModal('crewModal')">＋ Add crew member</button></div>
+  <div class="notice">In the connected system, invitations and account creation will require an authorised mission administrator. Adding a card here only changes this local demonstration.</div>
+  <div class="grid three" id="crewGrid" style="margin-top:17px"></div>
+</section>
+
+<section class="page" id="wellness">
+  <div class="page-head"><div><div class="eyebrow">CREW WELLBEING</div><h1>Crew Wellness</h1><p class="sub">A place for voluntary check-ins, sleep records and exercise summaries.</p></div></div>
+  <div class="grid three"><div class="card"><div class="metric-icon">☾</div><h3 style="margin-top:12px">Sleep log</h3><p class="sub">Record sleep duration, schedule and subjective rest quality.</p><span class="tag blue">Manual entry planned</span></div><div class="card"><div class="metric-icon">⌁</div><h3 style="margin-top:12px">Exercise log</h3><p class="sub">Record exercise sessions and activity completed during the mission.</p><span class="tag blue">Manual entry planned</span></div><div class="card"><div class="metric-icon">♡</div><h3 style="margin-top:12px">Wellness check-in</h3><p class="sub">Private self-reported mood, stress and fatigue check-ins.</p><span class="tag blue">Private by default</span></div></div>
+</section>
+
+<section class="page" id="inventory">
+  <div class="page-head"><div><div class="eyebrow">SUPPLY READINESS</div><h1>Medical Inventory</h1><p class="sub">Example inventory list for the mission prototype.</p></div><button class="btn" onclick="toast('Inventory editing will be connected to the backend in a later phase.')">＋ Add item</button></div>
+  <div class="card table-wrap"><table><thead><tr><th>ITEM</th><th>QUANTITY</th><th>STATUS</th><th>NOTE</th></tr></thead><tbody><tr><td>First-aid kit</td><td>4</td><td><span class="tag green">Available</span></td><td class="muted">Demo stock</td></tr><tr><td>Pulse oximeter</td><td>2</td><td><span class="tag green">Available</span></td><td class="muted">Device availability only</td></tr><tr><td>Digital thermometer</td><td>3</td><td><span class="tag green">Available</span></td><td class="muted">Demo stock</td></tr><tr><td>Medical gloves</td><td>20</td><td><span class="tag amber">Monitor stock</span></td><td class="muted">Demo stock</td></tr></tbody></table></div>
+</section>
+
+<section class="page" id="reports">
+  <div class="page-head"><div><div class="eyebrow">MISSION RECORDS</div><h1>Mission Reports</h1><p class="sub">A future workspace for authorised health summaries and mission reports.</p></div><button class="btn" onclick="toast('Report export will be implemented with stored mission records.')">Export report</button></div>
+  <div class="card"><h2>Report centre</h2><p class="sub">Reports will combine timestamped health records, medical requests, environmental measurements and clinician notes. Each report will identify whether data is simulated, manually entered or sensor-generated.</p><div class="list" style="margin-top:15px"><div class="list-row"><span>Daily crew health summary</span><span class="tag blue">Planned</span></div><div class="list-row"><span>Medical request history</span><span class="tag blue">Planned</span></div><div class="list-row"><span>Environmental exposure summary</span><span class="tag blue">Planned</span></div></div></div>
+</section>
+
+<section class="page" id="profile">
+  <div class="page-head"><div><div class="eyebrow">ACCOUNT / PERSONAL DETAILS</div><h1>My Astronaut Profile</h1><p class="sub">Update the demonstration profile shown in the sidebar.</p></div></div>
+  <div class="card" style="max-width:850px">
+    <div class="profile-large"><div class="avatar big" id="profileAvatar">AM</div><div><h2 id="profileDisplayName" style="margin:0 0 5px">Alex Morgan</h2><p class="sub">Mission Specialist · Crew ID AC-001</p><label class="btn" for="photoInput" style="display:inline-block;margin-top:10px;cursor:pointer">Upload profile photo</label><input type="file" id="photoInput" accept="image/*" hidden></div></div>
+    <form id="profileForm"><div class="form-grid">
+      <div class="field"><label>Full name</label><input id="profileName" value="Alex Morgan" required></div>
+      <div class="field"><label>Astronaut ID</label><input value="AC-001" disabled></div>
+      <div class="field"><label>Mission role</label><input id="profileRole" value="Mission Specialist"></div>
+      <div class="field"><label>Mission assignment</label><input id="profileMission" value="Deep Space Simulation"></div>
+      <div class="field"><label>Nationality</label><input id="profileNationality" placeholder="Enter nationality"></div>
+      <div class="field"><label>Contact email</label><input id="profileEmail" type="email" placeholder="name@example.com"></div>
+    </div><button class="btn primary" type="submit">Save profile changes</button></form>
+    <p class="muted small" style="margin-top:14px">Demo note: changes are stored in this browser only. A real account, secure photo storage and profile permissions will be implemented through Supabase.</p>
+  </div>
+</section>
+<footer>ASTROCARE 360 · SPACE HEALTH & MISSION SUPPORT · PROTOTYPE INTERFACE</footer>
+</div>
+</main>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<div id="crewModal" style="display:none;position:fixed;inset:0;background:#0009;z-index:30;place-items:center;padding:18px">
+  <div class="card" style="width:min(480px,100%);background:#161b22">
+    <div class="page-head" style="margin-bottom:15px"><div><h2>Add crew member</h2><p class="sub">Create a local demonstration crew card.</p></div><button class="btn" onclick="closeModal('crewModal')">✕</button></div>
+    <form id="crewForm"><div class="field"><label>Full name</label><input id="crewName" required placeholder="Crew member name"></div><div class="field"><label>Role</label><input id="crewRole" required placeholder="e.g. Flight Engineer"></div><div class="field"><label>Crew ID</label><input id="crewId" required placeholder="e.g. AC-004"></div><div class="field"><label>Profile photo (optional)</label><input type="file" id="crewPhoto" accept="image/*"></div><button class="btn primary" type="submit">Add crew member</button></form>
+  </div>
+</div>
+
+<script>
+const pageNames={overview:"Overview",body:"Body Monitoring",triage:"Medical Triage",vitals:"Vital Signs",hazards:"Space Health Risks",library:"Medical Library",chat:"Earth Connection",crew:"Crew Management",wellness:"Crew Wellness",inventory:"Medical Inventory",reports:"Mission Reports",profile:"My Profile"};
+function showPage(id){
+ document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id===id));
+ document.querySelectorAll('.nav-btn[data-page]').forEach(b=>b.classList.toggle('active',b.dataset.page===id));
+ document.getElementById('pageCrumb').textContent=pageNames[id]||id;
+ window.scrollTo({top:0,behavior:'smooth'});
+}
+document.querySelectorAll('.nav-btn[data-page]').forEach(b=>b.addEventListener('click',()=>showPage(b.dataset.page)));
+document.querySelectorAll('[data-open-profile]').forEach(b=>b.addEventListener('click',()=>showPage('profile')));
+function updateClock(){document.getElementById('clock').textContent=new Date().toISOString().slice(11,19)+' UTC'}
+updateClock();setInterval(updateClock,1000);
+let toastTimer;function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.style.display='block';clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.style.display='none',3000)}
+const bodyInfo={
+ "Cardiovascular system":["The heart and blood vessels move blood around the body, delivering oxygen and nutrients to tissues.",["Heart rate — requires a suitable pulse sensor or ECG.","Blood pressure — requires a validated blood-pressure device.","Heart rhythm — requires appropriate ECG equipment and clinical interpretation."]],
+ "Respiratory system":["The lungs and airways help bring oxygen into the body and remove carbon dioxide.",["Oxygen saturation — estimated by a suitable pulse oximeter.","Respiratory rate — counted or measured with suitable equipment.","Breathing symptoms — reported by the astronaut and assessed clinically."]],
+ "Nervous system":["The brain, spinal cord and nerves coordinate movement, sensation, thinking and many automatic body functions.",["Vision changes — report and assess with appropriate eye examinations.","Balance and dizziness — symptom report and suitable functional assessment.","Sleep and cognitive performance — structured records and validated tests."]],
+ "Musculoskeletal system":["Bones, muscles and joints support the body and enable movement.",["Exercise and movement — activity sensors or exercise logs.","Muscle function — suitable strength and functional assessments.","Bone health — clinical assessment; not measured by a basic wearable sensor."]],
+ "Digestive system":["The digestive system processes food, absorbs nutrients and removes waste.",["Appetite and nausea — self-reported symptoms.","Nutrition — food and dietary records.","Digestive symptoms — clinical review when needed."]],
+ "Urinary system":["The kidneys filter blood and help regulate water, salts and waste removal.",["Hydration — intake and fluid-balance records.","Urinary symptoms — self-reported information.","Kidney function — appropriate laboratory tests and clinical assessment."]],
+ "Skin and temperature":["The skin protects the body and helps regulate temperature.",["Temperature — suitable, validated thermometer.","Skin concerns — visual report and clinical assessment.","Cabin temperature — separate environmental sensor."]]
+};
+function selectBody(name){const d=bodyInfo[name];document.getElementById('bodyTitle').textContent=name;document.getElementById('bodyDesc').textContent=d[0];document.getElementById('bodyDetails').innerHTML=d[1].map(x=>`<div class="list-row"><span class="small">${x}</span></div>`).join('')}
+selectBody('Cardiovascular system');
+const terms=[
+ {term:"Hypoxia",cat:"Respiratory",simple:"A condition in which body tissues do not receive enough oxygen to work properly.",detail:"Hypoxia can have different causes and can be serious. A pulse oximeter reading is only one piece of information; symptoms and clinical assessment matter too.",related:"Oxygen saturation · Respiratory system · Hypoxemia"},
+ {term:"Arrhythmia",cat:"Cardiovascular",simple:"A heartbeat that is too fast, too slow or irregular.",detail:"Some rhythm changes are harmless, while others need medical attention. An ECG and clinician assessment may be needed to identify the rhythm.",related:"Heart rate · ECG · Cardiovascular system"},
+ {term:"Microgravity",cat:"Space medicine",simple:"An environment in which objects and people appear to experience very little weight.",detail:"Microgravity changes how the body adapts to movement, fluid distribution, muscles and bones. It is not the same as having no gravity anywhere.",related:"Bone density · Muscle atrophy · Fluid shift"},
+ {term:"Spaceflight-Associated Neuro-ocular Syndrome (SANS)",cat:"Space medicine",simple:"A group of eye and vision changes observed in some astronauts during or after spaceflight.",detail:"SANS is an area of ongoing research. Assessment requires appropriate eye examinations and medical expertise; it cannot be diagnosed by a simple website check.",related:"Vision · Optic disc · Microgravity"},
+ {term:"SpO₂",cat:"Respiratory",simple:"An estimate of the percentage of haemoglobin in the blood carrying oxygen, usually measured with a pulse oximeter.",detail:"The reading can be affected by movement, circulation, device fit and other factors. It is not a complete measure of breathing or overall health.",related:"Pulse oximeter · Hypoxia · Respiratory system"},
+ {term:"Osteoporosis",cat:"Space medicine",simple:"A condition in which bones become less dense and more likely to fracture.",detail:"Reduced mechanical loading during spaceflight can contribute to bone loss. Bone health is assessed with appropriate clinical methods, not a basic movement sensor.",related:"Bone density · Microgravity · Musculoskeletal system"},
+ {term:"ECG",cat:"Cardiovascular",simple:"An electrocardiogram is a test that records the electrical activity of the heart.",detail:"An ECG can help trained clinicians assess heart rhythm and electrical patterns. The recording needs appropriate interpretation.",related:"Arrhythmia · Heart rate · Cardiovascular system"},
+ {term:"Circadian rhythm",cat:"Neurology",simple:"The body's internal timing system that helps organise sleep and other daily patterns.",detail:"Light exposure, schedules and mission operations can affect sleep timing. Consistent routines and mission-approved countermeasures can support sleep health.",related:"Sleep · Fatigue · Light exposure"}
+];
+let currentFilter="All";
+function renderLibrary(){
+ const q=(document.getElementById('librarySearch').value||'').toLowerCase();
+ const filtered=terms.filter(t=>(currentFilter==="All"||t.cat===currentFilter)&&[t.term,t.cat,t.simple,t.related].join(' ').toLowerCase().includes(q));
+ document.getElementById('libraryResults').innerHTML=filtered.length?filtered.map(t=>`<article class="term-card"><span class="tag blue">${t.cat}</span><h3 style="margin-top:10px">${t.term}</h3><p>${t.simple}</p><details><summary class="small" style="color:var(--blue);cursor:pointer">Read more</summary><p>${t.detail}</p><p><strong>Related:</strong> ${t.related}</p></details></article>`).join(''):'<div class="empty">No matching terms found. Try another search.</div>';
+}
+document.getElementById('librarySearch').addEventListener('input',renderLibrary);
+function filterLibrary(c){currentFilter=c;renderLibrary()}
+renderLibrary();
+let crew=[
+ {name:"Alex Morgan",role:"Mission Specialist",id:"AC-001",photo:""},
+ {name:"Jordan Lee",role:"Flight Engineer",id:"AC-002",photo:""},
+ {name:"Samira Okafor",role:"Mission Scientist",id:"AC-003",photo:""}
+];
+function initials(n){return n.split(/\s+/).map(x=>x[0]).join('').slice(0,2).toUpperCase()}
+function avatarMarkup(person,cls="avatar"){return `<div class="${cls}">${person.photo?`<img src="${person.photo}" alt="Profile photo of ${person.name}">`:initials(person.name)}</div>`}
+function renderCrew(){
+ document.getElementById('crewGrid').innerHTML=crew.map((p,i)=>`<div class="card"><div class="crew-card">${avatarMarkup(p)}<div class="info"><strong>${escapeHTML(p.name)}</strong><small>${escapeHTML(p.role)} · ${escapeHTML(p.id)}</small></div><span class="tag green">Demo</span></div><div style="display:flex;justify-content:flex-end;margin-top:14px"><button class="btn" onclick="removeCrew(${i})">Remove card</button></div></div>`).join('');
+ document.getElementById('crewCount').textContent=crew.length+' registered';
+ const select=document.getElementById('triagePerson');select.innerHTML=crew.map(p=>`<option>${escapeHTML(p.name)}</option>`).join('');
+}
+function escapeHTML(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function removeCrew(i){if(i===0){toast('The primary demo profile cannot be removed here.');return}crew.splice(i,1);renderCrew();toast('Demo crew card removed.')}
+function openModal(id){document.getElementById(id).style.display='grid'}
+function closeModal(id){document.getElementById(id).style.display='none'}
+document.getElementById('crewForm').addEventListener('submit',e=>{
+ e.preventDefault();const name=document.getElementById('crewName').value.trim(),role=document.getElementById('crewRole').value.trim(),id=document.getElementById('crewId').value.trim();
+ if(crew.some(p=>p.id.toLowerCase()===id.toLowerCase())){toast('That demo crew ID already exists.');return}
+ const file=document.getElementById('crewPhoto').files[0];const add=photo=>{crew.push({name,role,id,photo:photo||''});renderCrew();e.target.reset();closeModal('crewModal');toast('Crew member added to this local demo.')};
+ if(file){const r=new FileReader();r.onload=()=>add(r.result);r.readAsDataURL(file)}else add('');
+});
+document.getElementById('profileForm').addEventListener('submit',e=>{
+ e.preventDefault();const name=document.getElementById('profileName').value.trim()||'Astronaut';document.getElementById('profileDisplayName').textContent=name;document.getElementById('miniName').textContent=name;
+ const p=crew[0];p.name=name;p.role=document.getElementById('profileRole').value||'Crew member';renderCrew();if(!p.photo){document.getElementById('miniAvatar').textContent=initials(name);document.getElementById('profileAvatar').textContent=initials(name)}
+ toast('Profile updated in this browser demo.');
+});
+document.getElementById('photoInput').addEventListener('change',e=>{
+ const file=e.target.files[0];if(!file)return;if(!file.type.startsWith('image/')){toast('Please choose an image file.');return}
+ const reader=new FileReader();reader.onload=()=>{const url=reader.result;crew[0].photo=url;document.getElementById('profileAvatar').innerHTML=`<img src="${url}" alt="Profile photo">`;document.getElementById('miniAvatar').innerHTML=`<img src="${url}" alt="Profile photo">`;renderCrew();toast('Profile photo updated in this browser demo.')};reader.readAsDataURL(file);
+});
+document.getElementById('chatForm').addEventListener('submit',e=>{
+ e.preventDefault();const input=document.getElementById('chatInput'),value=input.value.trim();if(!value)return;
+ const msg=document.createElement('div');msg.className='message mine';msg.textContent=value;const stamp=document.createElement('small');stamp.textContent='Local demo · not transmitted';msg.appendChild(stamp);document.getElementById('messages').appendChild(msg);input.value='';document.getElementById('messages').scrollTop=document.getElementById('messages').scrollHeight;toast('Message added locally. Backend delivery is not connected.');
+});
+document.getElementById('triageForm').addEventListener('submit',e=>{
+ e.preventDefault();const text=document.getElementById('triageText').value.trim();if(!text){toast('Please describe the concern first.');return}
+ document.getElementById('triageResult').textContent='Demo request prepared for '+document.getElementById('triagePerson').value+'. No clinician has received this request because the backend is not connected.';
+ toast('Demo medical request prepared.');
+});
+renderCrew();
+</script>
+</body>
+</html>
