@@ -118,6 +118,23 @@ footer{text-align:center;color:#64748b;font-size:10px;padding:25px}
  .chat-layout{grid-template-columns:1fr}.chat-list{border-right:0;border-bottom:1px solid var(--line);padding:0 0 12px}.chat-window{padding:12px 0 0}
 }
 @media(max-width:480px){.grid.four,.grid.three,.grid.two,.form-grid{grid-template-columns:1fr}.page-head{flex-direction:column}.top-actions .utc{display:none}.metric-value{font-size:23px}}
+
+/* Family connection prototype */
+.family-layout{display:grid;grid-template-columns:230px minmax(0,1fr);min-height:510px;overflow:hidden;padding:0}
+.family-contacts{padding:17px;border-right:1px solid var(--line);background:#121a24}
+.family-contact{display:flex;align-items:center;gap:10px;width:100%;padding:11px;border:1px solid transparent;border-radius:11px;background:transparent;color:var(--text);text-align:left;margin-top:7px}
+.family-contact.active,.family-contact:hover{background:#1d3040;border-color:#31516a}
+.family-avatar{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;background:#24445a;color:#bceaff;font-weight:750;flex:none}
+.family-chat{display:flex;flex-direction:column;min-width:0;min-height:510px}
+.family-chat-head{display:flex;align-items:center;gap:11px;padding:15px 18px;border-bottom:1px solid var(--line)}
+.family-messages{padding:18px;display:flex;flex-direction:column;gap:11px;overflow-y:auto;flex:1;min-height:300px;max-height:440px;background:radial-gradient(ellipse at top,#172636 0,#111821 70%)}
+.family-bubble{max-width:min(78%,480px);padding:10px 13px;border-radius:14px;background:#263444;border:1px solid #35475a;align-self:flex-start;font-size:12px;line-height:1.55;overflow-wrap:anywhere}
+.family-bubble.mine{align-self:flex-end;background:#075985;border-color:#0e7490}
+.family-bubble small{display:block;margin-top:5px;color:#b6c7d8;font-size:9px;text-align:right}
+.family-compose{display:flex;gap:9px;padding:13px;border-top:1px solid var(--line)}.family-compose input{flex:1;min-width:0}
+.family-quick{display:flex;flex-wrap:wrap;gap:7px;padding:0 13px 13px}.family-quick .btn{font-size:10px;padding:7px 9px}
+@media(max-width:760px){.family-layout{grid-template-columns:1fr}.family-contacts{border-right:0;border-bottom:1px solid var(--line)}.family-contacts-list{display:flex;gap:5px;overflow-x:auto}.family-contact{min-width:130px;margin-top:4px}.family-messages{max-height:380px}}
+
 </style>
 </head>
 <body>
@@ -135,6 +152,7 @@ footer{text-align:center;color:#64748b;font-size:10px;padding:25px}
       <button class="nav-btn" data-page="library"><span>▤</span>Medical Library</button>
       <button class="nav-btn" data-page="nasa"><span>🚀</span>NASA Health & Performance</button>
       <button class="nav-btn" data-page="firstaid"><span>✚</span>First Aid Guide</button>
+      <button class="nav-btn" data-page="family"><span>♡</span>Family Connection</button>
       <button class="nav-btn" data-page="chat"><span>◎</span>Earth Connection<span class="tag red" id="chatBadge" style="margin-left:auto;display:none">0</span></button>
       <button class="nav-btn" data-page="crew"><span>♙</span>Crew Management</button>
       <button class="nav-btn" data-page="wellness"><span>♡</span>Crew Wellness</button>
@@ -306,6 +324,26 @@ footer{text-align:center;color:#64748b;font-size:10px;padding:25px}
   </div>
 </section>
 
+
+<section class="page" id="family">
+  <div class="page-head"><div><div class="eyebrow">PERSONAL WELLBEING / EARTH CONNECTION</div><h1>Family Connection</h1><p class="sub">A familiar space for astronauts to share greetings, encouragement and everyday moments with the people they care about.</p></div><span class="tag blue">LOCAL DEMO</span></div>
+  <div class="notice" style="margin-bottom:15px"><strong>Prototype limitation:</strong> This chat is built into this HTML file and works only in this browser on this device. Messages are saved locally for demonstration; they are <strong>not delivered to real family members</strong> and are not visible to another person or device. A secure backend and verified family accounts will be needed for real communication.</div>
+  <div class="card family-layout">
+    <aside class="family-contacts"><h3>My family</h3><p class="muted small">Demo conversations</p><div class="family-contacts-list">
+      <button class="family-contact active" data-family-contact="mom"><span class="family-avatar">M</span><span><strong class="small">Mum</strong><small class="muted" style="display:block">Family</small></span></button>
+      <button class="family-contact" data-family-contact="dad"><span class="family-avatar">D</span><span><strong class="small">Dad</strong><small class="muted" style="display:block">Family</small></span></button>
+      <button class="family-contact" data-family-contact="group"><span class="family-avatar">♡</span><span><strong class="small">Family Group</strong><small class="muted" style="display:block">Everyone</small></span></button>
+    </div><p class="muted small" style="margin-top:18px">Demo contacts are fictional placeholders. Real contacts must be added through a secure, consent-based system.</p></aside>
+    <div class="family-chat">
+      <div class="family-chat-head"><span class="family-avatar" id="familyAvatar">M</span><div><h3 id="familyChatTitle" style="margin:0 0 3px">Mum</h3><span class="muted small">Personal conversation · Demo mode</span></div><span class="tag amber" style="margin-left:auto">Not live</span></div>
+      <div class="family-messages" id="familyMessages" aria-live="polite"></div>
+      <div class="family-quick"><button class="btn" type="button" data-family-quick="Hello! Just checking in. How is everyone doing back home?">👋 Send a greeting</button><button class="btn" type="button" data-family-quick="I miss you all. Sending love from up here. ❤️">❤️ Send some love</button><button class="btn" type="button" data-family-quick="I had a busy day, but I am doing okay. Tell me what is new at home!">🌍 Share an update</button></div>
+      <form class="family-compose" id="familyForm"><input id="familyInput" maxlength="1000" autocomplete="off" placeholder="Write a message to your family…" aria-label="Write a family message"><button class="btn primary" type="submit">Send</button></form>
+    </div>
+  </div>
+  <p class="muted small" style="margin-top:13px">Mental wellbeing note: staying connected can help astronauts feel supported, but this demo is not a counselling or emergency service. If someone is distressed or needs urgent support, use the mission's established psychological-support and emergency procedures.</p>
+</section>
+
 <section class="page" id="crew">
   <div class="page-head"><div><div class="eyebrow">MISSION PERSONNEL</div><h1>Crew Management</h1><p class="sub">View the crew and add crew profile cards.</p></div><button class="btn primary" onclick="openModal('crewModal')">＋ Add crew member</button></div>
   <div class="notice">In the connected system, invitations and account creation will require an authorised mission administrator. Adding a card here only changes this browser.</div>
@@ -358,7 +396,7 @@ footer{text-align:center;color:#64748b;font-size:10px;padding:25px}
 
 <script>
 let currentPage='overview';
-const pageNames={overview:"Overview",body:"Body Monitoring",triage:"Medical Triage",vitals:"Vital Signs",hazards:"Space Health Risks",library:"Medical Library",nasa:"NASA Health & Performance",firstaid:"First Aid Guide",chat:"Earth Connection",crew:"Crew Management",wellness:"Crew Wellness",inventory:"Medical Inventory",reports:"Mission Reports",profile:"My Profile"};
+const pageNames={overview:"Overview",body:"Body Monitoring",triage:"Medical Triage",vitals:"Vital Signs",hazards:"Space Health Risks",library:"Medical Library",nasa:"NASA Health & Performance",firstaid:"First Aid Guide",chat:"Earth Connection",family:"Family Connection",crew:"Crew Management",wellness:"Crew Wellness",inventory:"Medical Inventory",reports:"Mission Reports",profile:"My Profile"};
 function showPage(id){
  document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id===id));
  document.querySelectorAll('.nav-btn[data-page]').forEach(b=>b.classList.toggle('active',b.dataset.page===id));
@@ -604,7 +642,20 @@ $id('triageForm').addEventListener('submit',async e=>{
  finally{btn.disabled=false}
 });
 
-function onPageShown(id){if(id==='chat'){markDoctorRead();setTimeout(()=>{const b=$id('messages');b.scrollTop=b.scrollHeight},50)}updateChatBadge()}
+
+/* ---------- family connection: browser-local prototype only ---------- */
+const familyContacts={mom:{name:'Mum',avatar:'M',seed:[{from:'them',text:'Hi! We are all thinking about you. How is everything going?',time:'09:15'},{from:'me',text:'Hello Mum! I am doing well. Just wanted to say hi and let you know I miss you all. ❤️',time:'09:22'},{from:'them',text:'We miss you too. Everyone says hello. Remember to take your rest.',time:'09:24'}]},dad:{name:'Dad',avatar:'D',seed:[{from:'them',text:'Good morning! We are proud of you. How was your day?',time:'08:40'},{from:'me',text:'It was full, but productive. I will tell you more when I can. Give everyone my greetings.',time:'08:51'}]},group:{name:'Family Group',avatar:'♡',seed:[{from:'them',text:'Family group: Sending you greetings from home! ❤️',time:'Yesterday'},{from:'me',text:'Thank you everyone! It is good to hear from home. Love you all.',time:'Yesterday'}]}};
+let activeFamily='mom';
+function familyStorageKey(id){return 'astrocare360_family_demo_'+id}
+function getFamilyMessages(id){try{const saved=localStorage.getItem(familyStorageKey(id));return saved?JSON.parse(saved):familyContacts[id].seed.slice()}catch(e){return familyContacts[id].seed.slice()}}
+function saveFamilyMessages(id,msgs){try{localStorage.setItem(familyStorageKey(id),JSON.stringify(msgs))}catch(e){toast('This browser could not save the demo conversation.')}}
+function renderFamilyMessages(){const box=document.getElementById('familyMessages');if(!box)return;const msgs=getFamilyMessages(activeFamily);box.innerHTML='';msgs.forEach(m=>{const bubble=document.createElement('div');bubble.className='family-bubble'+(m.from==='me'?' mine':'');const body=document.createElement('div');body.textContent=m.text;const stamp=document.createElement('small');stamp.textContent=(m.from==='me'?'You':'Family')+' · '+m.time;bubble.append(body,stamp);box.appendChild(bubble)});box.scrollTop=box.scrollHeight}
+function selectFamilyContact(id){if(!familyContacts[id])return;activeFamily=id;document.querySelectorAll('[data-family-contact]').forEach(b=>b.classList.toggle('active',b.dataset.familyContact===id));document.getElementById('familyChatTitle').textContent=familyContacts[id].name;document.getElementById('familyAvatar').textContent=familyContacts[id].avatar;renderFamilyMessages()}
+document.querySelectorAll('[data-family-contact]').forEach(b=>b.addEventListener('click',()=>selectFamilyContact(b.dataset.familyContact)));
+document.getElementById('familyForm').addEventListener('submit',e=>{e.preventDefault();const input=document.getElementById('familyInput');const value=input.value.trim();if(!value)return;const msgs=getFamilyMessages(activeFamily);msgs.push({from:'me',text:value,time:new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})});saveFamilyMessages(activeFamily,msgs);input.value='';renderFamilyMessages();toast('Demo message saved on this device only. It was not delivered.')});
+document.querySelectorAll('[data-family-quick]').forEach(b=>b.addEventListener('click',()=>{document.getElementById('familyInput').value=b.dataset.familyQuick;document.getElementById('familyInput').focus()}));
+
+function onPageShown(id){if(id==='family'){renderFamilyMessages()}if(id==='chat'){markDoctorRead();setTimeout(()=>{const b=$id('messages');b.scrollTop=b.scrollHeight},50)}updateChatBadge()}
 
 /* start up */
 loadSavedProfile();renderCrew();applyProfileToUI();
