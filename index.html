@@ -4,8 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#0d1117">
-<meta name="description" content="AstroCare 360 is an Earth-first health monitoring and care-connection prototype inspired by space medicine.">
-<title>AstroCare 360 | Global Health & Care Connection</title>
+<title>AstroCare 360 | Astronaut Health & Mission Support</title>
 <style>
 :root{
   --bg:#0d1117;--panel:#161b22;--panel2:#1c2430;--line:#293544;
@@ -17,8 +16,8 @@
 body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,Segoe UI,Arial,sans-serif}
 button,input,select,textarea{font:inherit}
 button{cursor:pointer}
-.app{min-height:100vh;display:grid;grid-template-columns:255px 1fr}
-.sidebar{background:#10161e;border-right:1px solid var(--line);padding:22px 15px;display:flex;flex-direction:column;gap:22px}
+.app{min-height:100vh;display:grid;grid-template-columns:255px minmax(0,1fr)}
+.sidebar{min-width:0;background:#10161e;border-right:1px solid var(--line);padding:22px 15px;display:flex;flex-direction:column;gap:22px}
 .brand{display:flex;align-items:center;gap:11px;padding:5px 9px}
 .brand-mark{width:39px;height:39px;border-radius:12px;background:linear-gradient(135deg,#0284c7,#06b6d4);display:grid;place-items:center;font-size:21px;font-weight:800}
 .brand strong{display:block;font-size:15px;letter-spacing:.4px}.brand small{color:var(--muted);font-size:11px}
@@ -28,7 +27,7 @@ nav{display:grid;gap:5px}
 .nav-btn span:first-child{width:20px;text-align:center;font-size:16px}
 .nav-btn:hover,.nav-btn.active{background:#1c2b3b;color:#eaf7ff}
 .nav-btn.active{box-shadow:inset 3px 0 var(--blue)}
-.sidebar-bottom{margin-top:auto}
+.sidebar-bottom{margin-top:auto}.mobile-only{display:none}
 .profile-mini{display:flex;align-items:center;gap:10px;padding:12px;border:1px solid var(--line);border-radius:13px;background:#141d28;cursor:pointer}
 .avatar{width:37px;height:37px;border-radius:50%;background:#26394c;display:grid;place-items:center;overflow:hidden;color:#c7eaff;font-weight:700;flex:none}
 .avatar img{width:100%;height:100%;object-fit:cover}
@@ -46,7 +45,7 @@ nav{display:grid;gap:5px}
 h1{font-size:27px;margin:7px 0 6px;letter-spacing:-.5px}h2{font-size:17px;margin:0 0 15px}h3{font-size:14px;margin:0 0 9px}
 .sub{color:var(--muted);font-size:13px;line-height:1.6;margin:0}
 .btn{border:1px solid var(--line);background:#202b38;color:var(--text);padding:10px 14px;border-radius:10px;font-size:12px;font-weight:650}
-.btn:hover{border-color:#3b617b;background:#223242}
+.btn:hover{border-color:#4b7897;background:#24384a}
 .btn.primary{background:#087fb5;border-color:#087fb5;color:white}.btn.primary:hover{background:#0796d2}
 .btn.danger{background:#3a2024;border-color:#69343c;color:#ffb7bd}
 .grid{display:grid;gap:16px}.grid.four{grid-template-columns:repeat(4,minmax(0,1fr))}.grid.three{grid-template-columns:repeat(3,minmax(0,1fr))}.grid.two{grid-template-columns:repeat(2,minmax(0,1fr))}
@@ -67,10 +66,10 @@ label{display:block;color:#b8c5d4;font-size:11px;margin:0 0 7px}
 .form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.field{margin-bottom:13px}.field.full{grid-column:1/-1}
 .search{max-width:580px;position:relative}.search input{padding-left:38px}.search:before{content:"⌕";position:absolute;left:13px;top:7px;font-size:22px;color:var(--muted)}
 .notice{padding:13px 15px;border:1px solid #5a4724;background:#2b2417;color:#f5d79c;border-radius:12px;font-size:11px;line-height:1.6}
-.anatomy{display:grid;grid-template-columns:190px minmax(0,1fr);gap:18px}
-.body-map{min-height:320px;display:grid;place-items:center;background:radial-gradient(ellipse at center,#1d3447 0,#111a25 65%);border:1px solid var(--line);border-radius:15px;padding:18px}
-.figure{width:135px;height:265px;transform:scale(.76);transform-origin:center;position:relative;display:flex;align-items:center;flex-direction:column}
-.head{width:54px;height:62px;border:2px solid #76b9d6;border-radius:48% 48% 44% 44%;background:#25445a}
+.anatomy{display:grid;grid-template-columns:260px 1fr;gap:18px}
+.body-map{min-height:420px;display:grid;place-items:center;background:radial-gradient(ellipse at center,#1d3447 0,#111a25 65%);border:1px solid var(--line);border-radius:15px;padding:18px}
+.figure{width:190px;height:365px;position:relative;display:flex;align-items:center;flex-direction:column}
+.head{position:relative;width:54px;height:62px;border:2px solid #76b9d6;border-radius:48% 48% 44% 44%;background:#25445a}
 .neck{width:23px;height:18px;background:#25445a;border-left:2px solid #76b9d6;border-right:2px solid #76b9d6}
 .torso{width:104px;height:137px;background:#25445a;border:2px solid #76b9d6;border-radius:35px 35px 22px 22px;position:relative}
 .arm{position:absolute;top:10px;width:27px;height:130px;border:2px solid #76b9d6;background:#25445a;border-radius:20px}
@@ -78,8 +77,8 @@ label{display:block;color:#b8c5d4;font-size:11px;margin:0 0 7px}
 .leg{position:absolute;top:125px;width:38px;height:115px;border:2px solid #76b9d6;background:#25445a;border-radius:16px}
 .leg.left{left:10px}.leg.right{right:10px}
 .organ{position:absolute;border:0;border-radius:50%;background:#38bdf8;box-shadow:0 0 12px #38bdf899;cursor:pointer}
-.organ.heart{width:17px;height:17px;top:36px;left:28px;background:#ef737b}.organ.lungs{width:38px;height:29px;top:39px;left:32px;background:#38bdf8;opacity:.65;border-radius:10px}
-.organ.brain{width:23px;height:20px;top:18px;background:#b19aff}.organ.stomach{width:23px;height:27px;top:80px;left:42px;background:#f4b85d}
+.organ.heart{width:17px;height:17px;top:46px;left:43px;background:#ef737b;z-index:2}.organ.lungs{width:64px;height:40px;top:30px;left:20px;background:#38bdf8;opacity:.65;border-radius:10px}
+.organ.brain{width:24px;height:20px;top:14px;left:15px;background:#b19aff}.organ.stomach{width:23px;height:27px;top:80px;left:42px;background:#f4b85d}
 .organ:hover{outline:3px solid #ffffff55}
 .organ-label{font-size:10px;color:#b8c7d8;margin-top:10px}
 .body-buttons{display:flex;flex-wrap:wrap;gap:8px;margin-top:13px}
@@ -98,70 +97,43 @@ footer{text-align:center;color:#64748b;font-size:10px;padding:25px}
 .toast{position:fixed;right:22px;bottom:22px;background:#123329;border:1px solid #1e5947;color:#b7f4d9;padding:12px 16px;border-radius:11px;font-size:12px;display:none;z-index:20}
 @media(max-width:1050px){.grid.four{grid-template-columns:repeat(2,1fr)}.grid.three{grid-template-columns:repeat(2,1fr)}}
 @media(max-width:760px){
- .app{grid-template-columns:1fr}.sidebar{position:sticky;top:0;z-index:8;padding:10px 12px;border-right:0;border-bottom:1px solid var(--line);gap:9px}
- .brand{padding:2px 5px}.brand-mark{width:32px;height:32px}.sidebar nav{display:flex;overflow-x:auto;padding-bottom:3px}.nav-label,.sidebar-bottom{display:none}
+ .app{grid-template-columns:minmax(0,1fr)}.sidebar{position:sticky;top:0;z-index:8;padding:10px 12px;border-right:0;border-bottom:1px solid var(--line);gap:9px}
+ .brand{padding:2px 5px}.brand-mark{width:32px;height:32px}.sidebar nav{display:flex;overflow-x:auto;padding-bottom:3px}.nav-label,.sidebar-bottom{display:none}.mobile-only{display:flex}
  .nav-btn{width:auto;white-space:nowrap;padding:9px 11px;font-size:11px}.nav-btn span:first-child{width:auto}
  .topbar{height:54px;padding:0 16px}.content{padding:22px 15px 35px}h1{font-size:23px}
  .grid.four,.grid.three,.grid.two{grid-template-columns:1fr 1fr}.anatomy{grid-template-columns:1fr}.body-map{min-height:380px}
  .chat-layout{grid-template-columns:1fr}.chat-list{border-right:0;border-bottom:1px solid var(--line);padding:0 0 12px}.chat-window{padding:12px 0 0}
 }
 @media(max-width:480px){.grid.four,.grid.three,.grid.two,.form-grid{grid-template-columns:1fr}.page-head{flex-direction:column}.top-actions .utc{display:none}.metric-value{font-size:23px}}
-
-
-
-.records-toolbar{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:15px}
-.record-card{background:#121a24;border:1px solid var(--line);border-radius:12px;padding:15px}
-.record-card h3{margin:8px 0}.record-meta{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}
-.record-actions{display:flex;gap:7px;flex-wrap:wrap;margin-top:12px}
-#recordStatus{font-size:11px;line-height:1.5;color:var(--muted);margin-top:10px}
-.record-auth{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-
 </style>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
-
-<section id="patientAuthGate" style="min-height:100vh;display:none;place-items:center;padding:22px;background:radial-gradient(circle at 80% 10%,#153448,transparent 34%),var(--bg)">
- <div class="card" style="width:min(460px,100%);padding:28px">
-  <div class="brand-mark" style="margin-bottom:16px">✦</div><div class="eyebrow">ASTROCARE 360 · PATIENT ACCESS</div><h1 style="margin:8px 0">Sign in to your account</h1>
-  <p class="sub" style="margin-bottom:18px">Use your own account to keep medical records linked to your identity. Do not use a shared or public device for sensitive records.</p>
-  <form id="patientAuthForm"><div class="field"><label for="patientAuthEmail">EMAIL</label><input id="patientAuthEmail" type="email" autocomplete="username" required placeholder="you@example.com"></div>
-  <div class="field"><label for="patientAuthPassword">PASSWORD</label><input id="patientAuthPassword" type="password" autocomplete="current-password" required minlength="8" placeholder="Your password"></div>
-  <div class="field" id="patientNameField" style="display:none"><label for="patientAuthName">DISPLAY NAME</label><input id="patientAuthName" maxlength="80" placeholder="Your name"></div>
-  <button class="btn primary" id="patientAuthSubmit" type="submit">Sign in</button> <button class="btn" type="button" id="patientAuthToggle">Create account</button>
-  <p id="patientAuthStatus" class="small muted" role="status" style="margin-top:13px"></p></form>
-  <p class="muted small" style="margin:16px 0 0">Prototype notice: this is not an emergency service or a clinically validated record system.</p>
- </div>
-</section>
-
-<div class="app" id="patientApp" style="display:none">
+<div class="app">
 <aside class="sidebar">
-  <div class="brand"><div class="brand-mark">✦</div><div><strong>ASTROCARE 360</strong><small>GLOBAL HEALTH PLATFORM</small></div></div>
+  <div class="brand"><div class="brand-mark">✦</div><div><strong>ASTROCARE 360</strong><small>SPACE HEALTH SYSTEM</small></div></div>
   <div>
-    <div class="nav-label">HEALTH WORKSPACE</div>
+    <div class="nav-label">MISSION WORKSPACE</div>
     <nav id="mainNav">
       <button class="nav-btn active" data-page="overview"><span>▦</span>Overview</button>
-      <button class="nav-btn" data-page="body"><span>♧</span>Body Systems</button>
-      <button class="nav-btn" data-page="triage"><span>✚</span>Health Check</button>
-      <button class="nav-btn" data-page="records"><span>▤</span>Medical Records</button>
-      <button class="nav-btn" data-page="firstaid"><span>✚</span>Offline First Aid</button>
+      <button class="nav-btn" data-page="body"><span>♧</span>Body Monitoring</button>
+      <button class="nav-btn" data-page="triage"><span>✚</span>Medical Triage</button>
       <button class="nav-btn" data-page="vitals"><span>⌁</span>Vital Signs</button>
-      <button class="nav-btn" data-page="hazards"><span>◈</span>Space Medicine</button>
+      <button class="nav-btn" data-page="hazards"><span>◈</span>Space Health Risks</button>
       <button class="nav-btn" data-page="library"><span>▤</span>Medical Library</button>
-      <button class="nav-btn" data-page="chat"><span>◎</span>Care Connection</button>
-      <button class="nav-btn" data-page="family"><span>⌂</span>Family & Connection</button>
-      <button class="nav-btn" data-page="crew"><span>♙</span>My Care Network</button>
-      <button class="nav-btn" data-page="wellness"><span>♡</span>Wellness & Lifestyle</button>
-      <button class="nav-btn" data-page="inventory"><span>▣</span>Health Resources</button>
-      <button class="nav-btn" data-page="reports"><span>▥</span>Health Summary</button>
+      <button class="nav-btn" data-page="chat"><span>◎</span>Earth Connection</button>
+      <button class="nav-btn" data-page="crew"><span>♙</span>Crew Management</button>
+      <button class="nav-btn" data-page="wellness"><span>♡</span>Crew Wellness</button>
+      <button class="nav-btn" data-page="inventory"><span>▣</span>Medical Inventory</button>
+      <button class="nav-btn" data-page="reports"><span>▥</span>Mission Reports</button>
+      <button class="nav-btn mobile-only" data-page="profile"><span>⚙</span>My Profile</button>
     </nav>
   </div>
   <div class="sidebar-bottom">
     <div class="nav-label">ACCOUNT</div>
     <button class="nav-btn" data-page="profile"><span>⚙</span>My Profile & Settings</button>
     <div class="profile-mini" id="miniProfile" data-open-profile>
-      <div class="avatar" id="miniAvatar">A1</div>
-      <div><strong id="miniName">Your profile</strong><small>Individual</small></div>
+      <div class="avatar" id="miniAvatar">AM</div>
+      <div><strong id="miniName">Alex Morgan</strong><small id="miniRole">Mission Specialist</small></div>
       <span style="margin-left:auto;color:#7f91a4">›</span>
     </div>
   </div>
@@ -170,90 +142,44 @@ footer{text-align:center;color:#64748b;font-size:10px;padding:25px}
 <main class="main">
 <header class="topbar">
   <div class="breadcrumb">ASTROCARE <span style="color:#506174">/</span> <strong id="pageCrumb">Overview</strong></div>
-  <div class="top-actions"><span class="status" id="platformStatus"><span class="dot"></span> CONNECTION STATUS: CHECKING</span><span class="utc" id="clock">--:--:-- UTC</span><button class="btn" type="button" onclick="patientSignOut()">Sign out</button></div>
+  <div class="top-actions"><span class="status"><span class="dot"></span> DEMO SYSTEM</span><span class="utc" id="clock">--:--:-- UTC</span></div>
 </header>
 
 <div class="content">
-<div class="notice" style="margin-bottom:18px;border-color:#24506a;background:#132635;color:#c8eaff"><strong>Earth-first platform:</strong> AstroCare 360 is designed as a health-support concept for people and communities on Earth. Space medicine remains a specialised area of inspiration. This prototype does not diagnose conditions or provide emergency care.</div>
 <section class="page active" id="overview">
-  <div class="page-head"><div><div class="eyebrow">PERSONAL HEALTH / OVERVIEW</div><h1>Your Health Dashboard</h1><p class="sub">A central place to review your health information, track measurements and connect with care professionals.</p></div><span class="tag amber">NO VERIFIED READINGS</span></div>
-  <div class="notice">No health readings are available yet. Measurements will appear only after you record them manually or connect a supported device. This platform does not diagnose conditions or replace professional care.</div>
+  <div class="page-head"><div><div class="eyebrow">MISSION CONTROL / HEALTH</div><h1>Mission Overview</h1><p class="sub">A central view of crew health, medical activity and spacecraft environment.</p></div><span class="tag blue">SIMULATED MISSION DATA</span></div>
+  <div class="notice">Prototype mode: all health readings and mission events on this page are simulated examples. They are not connected to medical sensors or a clinical service.</div>
   <div class="grid four" style="margin-top:16px">
-    <div class="card"><div class="metric-top">Heart rate <span class="metric-icon">♡</span></div><div class="metric-value">—</div><div class="metric-foot">No readings recorded</div></div>
-    <div class="card"><div class="metric-top">Oxygen saturation <span class="metric-icon">◉</span></div><div class="metric-value">—</div><div class="metric-foot">No readings recorded</div></div>
-    <div class="card"><div class="metric-top">Body temperature <span class="metric-icon">♨</span></div><div class="metric-value">—</div><div class="metric-foot">No readings recorded</div></div>
-    <div class="card"><div class="metric-top">Medical requests <span class="metric-icon">✚</span></div><div class="metric-value">—</div><div class="metric-foot">Request service not connected</div></div>
+    <div class="card"><div class="metric-top">Heart rate <span class="metric-icon">♡</span></div><div class="metric-value">76 <span style="font-size:13px;color:var(--muted)">BPM</span></div><div class="metric-foot"><span class="tag green">Simulated</span> Example reading</div></div>
+    <div class="card"><div class="metric-top">Oxygen saturation <span class="metric-icon">◉</span></div><div class="metric-value">98<span style="font-size:13px;color:var(--muted)">%</span></div><div class="metric-foot"><span class="tag green">Simulated</span> Example reading</div></div>
+    <div class="card"><div class="metric-top">Body temperature <span class="metric-icon">♨</span></div><div class="metric-value">36.8<span style="font-size:13px;color:var(--muted)">°C</span></div><div class="metric-foot"><span class="tag green">Simulated</span> Example reading</div></div>
+    <div class="card"><div class="metric-top">Open medical requests <span class="metric-icon">✚</span></div><div class="metric-value">02</div><div class="metric-foot">Demo requests awaiting review</div></div>
   </div>
   <div class="grid two" style="margin-top:17px">
-    <div class="card"><div class="section-row" style="margin:0 0 10px"><h2>Care overview</h2><span class="tag green">Prototype</span></div><div class="list">
-      <div class="list-row"><span class="muted small">Platform focus</span><strong class="small">Everyday health support</strong></div>
-      <div class="list-row"><span class="muted small">Your records</span><strong class="small">Supabase account</strong></div>
-      <div class="list-row"><span class="muted small">Care network</span><strong class="small" id="crewCount">No profiles added</strong></div>
-      <div class="list-row"><span class="muted small">Care connection</span><span class="tag amber">Not configured</span></div>
+    <div class="card"><div class="section-row" style="margin:0 0 10px"><h2>Mission status</h2><span class="tag green">Nominal · Demo</span></div><div class="list">
+      <div class="list-row"><span class="muted small">Mission</span><strong class="small">Deep Space Simulation</strong></div>
+      <div class="list-row"><span class="muted small">Mission day</span><strong class="small">Day 014</strong></div>
+      <div class="list-row"><span class="muted small">Crew members</span><strong class="small" id="crewCount">3 registered</strong></div>
+      <div class="list-row"><span class="muted small">Earth connection</span><span class="tag amber">Demo connection</span></div>
     </div></div>
-    <div class="card"><div class="section-row" style="margin:0 0 10px"><h2>Recent health activity</h2><span class="tag amber">Live data only</span></div><div class="empty">No health activity has been recorded in this account yet.</div></div>
+    <div class="card"><div class="section-row" style="margin:0 0 10px"><h2>Recent activity</h2><span class="tag blue">Demo</span></div><div class="list">
+      <div class="list-row"><div><strong class="small">Daily wellness check-in</strong><div class="muted small">Crew Member 002</div></div><span class="muted small">09:15</span></div>
+      <div class="list-row"><div><strong class="small">Health report updated</strong><div class="muted small">Crew Member 001</div></div><span class="muted small">08:42</span></div>
+      <div class="list-row"><div><strong class="small">Medical library viewed</strong><div class="muted small">Respiratory health</div></div><span class="muted small">Yesterday</span></div>
+    </div></div>
   </div>
   <div class="section-row"><h2>Quick access</h2></div>
   <div class="grid three">
-    <button class="card" style="text-align:left;color:var(--text)" onclick="showPage('library')"><h3>▤ Medical Library</h3><p class="sub">Search health terms in simple language.</p></button>
-    <button class="card" style="text-align:left;color:var(--text)" onclick="showPage('chat')"><h3>◎ Connect to Care</h3><p class="sub">Open secure patient–clinician messaging.</p></button>
-    <button class="card" style="text-align:left;color:var(--text)" onclick="showPage('crew')"><h3>♙ My Care Network</h3><p class="sub">View your locally saved care-network notes.</p></button>
+    <button class="card" style="text-align:left;color:var(--text)" onclick="showPage('library')"><h3>▤ Medical Library</h3><p class="sub">Search medical terms in simple language.</p></button>
+    <button class="card" style="text-align:left;color:var(--text)" onclick="showPage('chat')"><h3>◎ Earth Medical Connection</h3><p class="sub">Open the prototype doctor messaging area.</p></button>
+    <button class="card" style="text-align:left;color:var(--text)" onclick="showPage('crew')"><h3>♙ Crew Management</h3><p class="sub">View and add demo crew profiles.</p></button>
   </div>
-</section>
-
-
-<section class="page" id="records">
-  <div class="page-head">
-    <div><div class="eyebrow">PERSONAL HEALTH / PRIVATE RECORDS</div><h1>Medical Records</h1>
-      <p class="sub">Create and organise your health information. Records are private to your signed-in account.</p>
-    </div>
-    <span class="tag amber">PRIVATE ACCOUNT REQUIRED</span>
-  </div>
-  <div class="notice" style="border-color:#24506a;background:#132635;color:#c8eaff">
-    <strong>Privacy notice:</strong> This prototype stores records under a private account identity. It is not a clinical record system and must not be used for emergencies. Create a personal email/password account. Supabase keeps an authenticated session on this device; the password itself is not saved in browser storage. Access depends on Supabase authentication and database policies.
-  </div>
-  <div class="card" style="margin-top:16px">
-    <div class="records-toolbar">
-      <div><h2 style="margin:0 0 5px">Your records</h2><p class="sub">Only records permitted by your account's database policies are returned.</p></div>
-      <div class="record-auth"><span class="tag amber" id="recordConnection">Connecting securely…</span><button class="btn" type="button" onclick="loadMedicalRecords()">↻ Refresh</button></div>
-    </div>
-    <div id="recordStatus" role="status" aria-live="polite">Establishing a private session…</div>
-    <div id="medicalRecordsList" class="grid two" style="margin-top:14px">
-      <div class="empty">Connecting to the secure records service…</div>
-    </div>
-  </div>
-  <div class="card" style="margin-top:16px">
-    <h2 id="recordFormHeading">Add a medical record</h2>
-    <p class="sub" style="margin-bottom:16px">Enter information you want to keep organised. Do not enter information you are not comfortable storing in this prototype.</p>
-    <form id="medicalRecordForm">
-      <input type="hidden" id="recordId">
-      <div class="form-grid">
-        <div class="field"><label for="recordTitle">Record title *</label><input id="recordTitle" maxlength="140" required placeholder="e.g. Clinic visit – November"></div>
-        <div class="field"><label for="recordCategory">Category</label>
-          <select id="recordCategory">
-            <option value="Medical history">Medical history</option><option value="Consultation">Consultation</option>
-            <option value="Medication">Medication</option><option value="Laboratory result">Laboratory result</option>
-            <option value="Allergy">Allergy</option><option value="Vaccination">Vaccination</option>
-            <option value="Other">Other</option>
-          </select>
-        </div>
-        <div class="field full"><label for="recordContent">Record details</label><textarea id="recordContent" rows="5" maxlength="12000" placeholder="Add relevant notes, dates, instructions or context…"></textarea></div>
-        <div class="field full"><label for="recordFile">Supporting document (optional; PDF, JPG or PNG, max 8 MB)</label><input id="recordFile" type="file" accept=".pdf,.jpg,.jpeg,.png,application/pdf,image/jpeg,image/png"></div>
-      </div>
-      <div style="display:flex;gap:8px;flex-wrap:wrap">
-        <button class="btn primary" id="saveRecordBtn" type="submit">Save record</button>
-        <button class="btn" type="button" onclick="resetMedicalRecordForm()">Clear form</button>
-      </div>
-      <div id="recordFormStatus" role="status" aria-live="polite" class="small muted" style="margin-top:10px"></div>
-    </form>
-  </div>
-  <p class="muted small" style="margin-top:13px">Data classification: user-entered information is labelled as non-simulated. This does not mean it has been clinically verified. Attachments are stored in a private bucket and access depends on Supabase Storage policies.</p>
 </section>
 
 <section class="page" id="body">
-  <div class="page-head"><div><div class="eyebrow">ANATOMY / EXPLORER</div><h1>Interactive Body Systems</h1><p class="sub">Select a body system to see what can be assessed and which measurements may be relevant.</p></div></div>
+  <div class="page-head"><div><div class="eyebrow">ANATOMY / EXPLORER</div><h1>Interactive Body Monitoring</h1><p class="sub">Select a body system to see what can be assessed and which measurements may be relevant.</p></div></div>
   <div class="anatomy">
-    <div class="body-map"><div><div class="figure"><div class="head"></div><div class="neck"></div><div class="torso"><button class="organ lungs" title="Respiratory system" onclick="selectBody('Respiratory system')"></button><button class="organ heart" title="Cardiovascular system" onclick="selectBody('Cardiovascular system')"></button><button class="organ stomach" title="Digestive system" onclick="selectBody('Digestive system')"></button><div class="arm left"></div><div class="arm right"></div><div class="leg left"></div><div class="leg right"></div></div></div><div class="organ-label">SELECT A BODY SYSTEM</div></div></div>
+    <div class="body-map"><div><div class="figure"><div class="head"><button class="organ brain" title="Nervous system" onclick="selectBody('Nervous system')"></button></div><div class="neck"></div><div class="torso"><button class="organ lungs" title="Respiratory system" onclick="selectBody('Respiratory system')"></button><button class="organ heart" title="Cardiovascular system" onclick="selectBody('Cardiovascular system')"></button><button class="organ stomach" title="Digestive system" onclick="selectBody('Digestive system')"></button><div class="arm left"></div><div class="arm right"></div><div class="leg left"></div><div class="leg right"></div></div></div><div class="organ-label">SELECT A BODY SYSTEM</div></div></div>
     <div class="card"><div class="eyebrow">SELECTED SYSTEM</div><h2 id="bodyTitle" style="margin-top:8px">Cardiovascular system</h2><p class="sub" id="bodyDesc">The heart and blood vessels move blood around the body, delivering oxygen and nutrients to tissues.</p>
       <div class="section-row"><h3>Relevant assessments</h3></div><div class="list" id="bodyDetails"></div>
       <div class="body-buttons">
@@ -265,48 +191,36 @@ footer{text-align:center;color:#64748b;font-size:10px;padding:25px}
 </section>
 
 <section class="page" id="triage">
-  <div class="page-head"><div><div class="eyebrow">MEDICAL SUPPORT</div><h1>Health Check-In</h1><p class="sub">Record a health concern and prepare a summary for a healthcare professional when a secure connection is available.</p></div></div>
-  <div class="notice">This prototype does not diagnose, determine clinical urgency or provide emergency response. If someone may be in immediate danger, contact local emergency services or seek urgent in-person care; do not wait for this website.</div>
+  <div class="page-head"><div><div class="eyebrow">MEDICAL SUPPORT</div><h1>Medical Triage Request</h1><p class="sub">Record a concern and prepare it for review by the authorised medical team.</p></div></div>
+  <div class="notice">This prototype does not diagnose or determine clinical urgency. Follow mission emergency procedures immediately if someone may be in danger; do not wait for a website response.</div>
   <div class="card" style="margin-top:16px;max-width:800px">
     <form id="triageForm">
       <div class="form-grid">
         <div class="field"><label>Person reporting</label><select id="triagePerson"></select></div>
         <div class="field"><label>Concern category</label><select id="triageCategory"><option>General health concern</option><option>Breathing or respiratory concern</option><option>Heart or circulation concern</option><option>Vision or neurological concern</option><option>Injury or pain</option><option>Sleep or fatigue</option><option>Other</option></select></div>
         <div class="field"><label>When did it begin?</label><select><option>Just now</option><option>Within the last few hours</option><option>Today</option><option>Several days ago</option></select></div>
-        <div class="field"><label>Preferred contact</label><select><option>Healthcare professional</option><option>Clinic / hospital</option></select></div>
+        <div class="field"><label>Preferred contact</label><select><option>Earth medical team</option><option>Mission medical officer</option></select></div>
         <div class="field full"><label>Describe the concern</label><textarea id="triageText" rows="5" placeholder="Describe what happened, when it began, and any relevant details..."></textarea></div>
       </div>
-      <button class="btn primary" type="submit">Prepare check-in summary</button>
+      <button class="btn primary" type="submit">Prepare medical request</button>
     </form>
     <div id="triageResult" class="small muted" style="margin-top:12px"></div>
   </div>
 </section>
 
-<section class="page" id="firstaid">
-  <div class="page-head"><div><div class="eyebrow">OFFLINE-READY SAFETY SUPPORT</div><h1>First Aid & Communication Backup</h1><p class="sub">A readily available reference for periods when a person cannot reach their healthcare team or mission control.</p></div><span class="tag amber">EDUCATIONAL PROTOTYPE</span></div>
-  <div class="notice"><strong>Urgent situation?</strong> Contact local emergency services immediately when possible. Follow instructions from a qualified emergency dispatcher or trained responder. This page is not a substitute for emergency services, certified first-aid training, or mission-approved procedures.</div>
-  <div class="grid two" style="margin-top:16px">
-    <div class="card"><div class="metric-icon">⌁</div><h3 style="margin-top:12px">When communication is interrupted</h3><p class="sub">Keep essential, professionally reviewed guidance available on the device. Record the time, symptoms reported, available measurements and actions taken. Retry the approved communication channel at the intervals defined by the responsible organisation.</p><span class="tag green">Designed for offline access</span></div>
-    <div class="card"><div class="metric-icon">▣</div><h3 style="margin-top:12px">Personal emergency information</h3><p class="sub">Keep emergency contacts, relevant allergies, current medicines and important medical information accessible to the user and authorised responders.</p><span class="tag blue">User-managed information</span></div>
-  </div>
-  <div class="section-row"><h2>Quick safety checklist</h2><span class="tag blue">Cached reference</span></div>
-  <div class="card"><div class="list"><div class="list-row"><span>1. Check that the surroundings are safe before approaching.</span><span class="tag blue">Safety</span></div><div class="list-row"><span>2. Seek emergency assistance or follow the approved mission escalation procedure.</span><span class="tag red">Escalation</span></div><div class="list-row"><span>3. Follow dispatcher instructions or the person's certified training.</span><span class="tag blue">Guidance</span></div><div class="list-row"><span>4. Record observations and measurements with their source and timestamp.</span><span class="tag blue">Record</span></div><div class="list-row"><span>5. Synchronise the record when a secure connection returns.</span><span class="tag green">Sync later</span></div></div></div>
-  <p class="muted small" style="margin-top:12px">For astronaut use, mission-specific medical checklists and flight rules must be approved by mission medical and operations teams. The prototype must never replace those procedures.</p>
-</section>
-
 <section class="page" id="vitals">
-  <div class="page-head"><div><div class="eyebrow">PERSONAL HEALTH DATA</div><h1>Health Measurements</h1><p class="sub">Review example measurements and learn how their sources should be identified.</p></div><span class="tag amber">SIMULATED DATA</span></div>
+  <div class="page-head"><div><div class="eyebrow">HEALTH DATA</div><h1>Vital Signs & Analytics</h1><p class="sub">View example readings and their data sources.</p></div><span class="tag amber">SIMULATED DATA</span></div>
   <div class="grid four">
     <div class="card"><div class="metric-top">Heart rate</div><div class="metric-value">76 <small>BPM</small></div><span class="tag blue">Demo value</span></div>
     <div class="card"><div class="metric-top">Blood pressure</div><div class="metric-value">118/78</div><span class="tag blue">Demo value · mmHg</span></div>
     <div class="card"><div class="metric-top">SpO₂</div><div class="metric-value">98%</div><span class="tag blue">Demo value</span></div>
     <div class="card"><div class="metric-top">Temperature</div><div class="metric-value">36.8°C</div><span class="tag blue">Demo value</span></div>
   </div>
-  <div class="card" style="margin-top:17px"><h2>Measurement source labels</h2><div class="list"><div class="list-row"><span>Simulated</span><span class="tag amber">Generated for demonstration</span></div><div class="list-row"><span>Manual entry</span><span class="tag blue">Entered by an authorised user</span></div><div class="list-row"><span>Sensor reading</span><span class="tag green">Received from connected hardware</span></div></div><p class="sub" style="margin-top:12px">Arduino sensor integration is planned. Any future reading must include its timestamp, device identity, source and signal-quality status. Sensor estimates are not diagnoses.</p></div>
+  <div class="card" style="margin-top:17px"><h2>Measurement source labels</h2><div class="list"><div class="list-row"><span>Simulated</span><span class="tag amber">Generated for demonstration</span></div><div class="list-row"><span>Manual entry</span><span class="tag blue">Entered by an authorised user</span></div><div class="list-row"><span>Sensor reading</span><span class="tag green">Received from connected hardware</span></div></div><p class="sub" style="margin-top:12px">A real sensor connection will be added later. The website must show timestamps, device identity and signal-quality information when real data is available.</p></div>
 </section>
 
 <section class="page" id="hazards">
-  <div class="page-head"><div><div class="eyebrow">SPACE MEDICINE / SPECIALISED KNOWLEDGE</div><h1>Space Medicine Insights</h1><p class="sub">Learn how health challenges in extreme environments inspire monitoring, prevention and care innovations that may also benefit people on Earth.</p></div></div>
+  <div class="page-head"><div><div class="eyebrow">SPACE ENVIRONMENT</div><h1>Space Health Risks</h1><p class="sub">A future module for environmental and spaceflight health monitoring.</p></div></div>
   <div class="grid three">
     <div class="card"><div class="metric-icon">☼</div><h3 style="margin-top:13px">Radiation exposure</h3><p class="sub">Record radiation measurements and cumulative exposure from an appropriate dosimeter.</p><span class="tag amber">Awaiting sensor integration</span></div>
     <div class="card"><div class="metric-icon">◌</div><h3 style="margin-top:13px">Microgravity health</h3><p class="sub">Track exercise, mobility, muscle function and bone-health assessment records.</p><span class="tag blue">Manual / assessment data</span></div>
@@ -318,7 +232,7 @@ footer{text-align:center;color:#64748b;font-size:10px;padding:25px}
 </section>
 
 <section class="page" id="library">
-  <div class="page-head"><div><div class="eyebrow">KNOWLEDGE CENTRE</div><h1>Medical Library</h1><p class="sub">Search simple explanations of health terms, body systems and selected space medicine concepts.</p></div><span class="tag green">EDUCATIONAL CONTENT</span></div>
+  <div class="page-head"><div><div class="eyebrow">KNOWLEDGE CENTRE</div><h1>Medical Library</h1><p class="sub">Search simple explanations of medical terms, body systems and space medicine concepts.</p></div><span class="tag green">LOCAL DEMO LIBRARY</span></div>
   <div class="search"><input id="librarySearch" placeholder="Search a medical term, condition or body system..."></div>
   <div class="section-row"><h2>Browse categories</h2></div>
   <div class="body-buttons" style="margin:0 0 18px"><button class="btn" onclick="filterLibrary('All')">All</button><button class="btn" onclick="filterLibrary('Cardiovascular')">Cardiovascular</button><button class="btn" onclick="filterLibrary('Respiratory')">Respiratory</button><button class="btn" onclick="filterLibrary('Space medicine')">Space medicine</button><button class="btn" onclick="filterLibrary('Neurology')">Neurology</button></div>
@@ -327,81 +241,51 @@ footer{text-align:center;color:#64748b;font-size:10px;padding:25px}
 </section>
 
 <section class="page" id="chat">
-  <div class="page-head"><div><div class="eyebrow">PATIENT / PROFESSIONAL CONNECTION</div><h1>Connect to a Healthcare Professional</h1><p class="sub">Secure communication between a signed-in patient and an authorised clinician.</p></div><span class="tag amber" id="chatConnectionTag">Messaging setup required</span></div>
-  <div class="notice">Messages are stored in your AstroCare account and visible only to the patient and assigned healthcare professional permitted by the database policies. This prototype is not an emergency channel; delivery may be delayed by connectivity.</div>
-  <div class="grid two" style="margin-top:16px;align-items:start">
-    <div class="card">
-      <h2>Start a conversation</h2>
-      <p class="sub" style="margin-bottom:12px">Choose an authorised clinician listed by the secure directory.</p>
-      <div class="field"><label for="patientDoctorSelect">HEALTHCARE PROFESSIONAL</label><select id="patientDoctorSelect"><option value="">Loading authorised clinicians…</option></select></div>
-      <button class="btn primary" type="button" id="startPatientConversation">Start conversation</button>
-      <p id="patientChatStatus" class="muted small" role="status" style="margin-top:12px">Checking secure messaging service…</p>
-      <h3 style="margin-top:20px">Your conversations</h3><div id="patientConversationList" class="list"><div class="empty">No conversations loaded.</div></div>
-    </div>
-    <div class="card">
-      <div class="section-row" style="margin-top:0"><h2 id="patientChatTitle">Conversation</h2><span class="tag amber" id="patientChatState">Not selected</span></div>
-      <div id="patientMessages" class="messages" style="min-height:260px;max-height:390px"><div class="empty">Select a conversation to view messages.</div></div>
-      <form id="patientMessageForm" class="chat-compose"><input id="patientMessageInput" maxlength="4000" placeholder="Write a message…" autocomplete="off" disabled><button class="btn primary" id="patientSendButton" disabled>Send</button></form>
-    </div>
+  <div class="page-head"><div><div class="eyebrow">EARTH MEDICAL CONNECTION</div><h1>Medical Communication</h1><p class="sub">Prototype messaging between the astronaut portal and a future doctor portal.</p></div><span class="tag amber">LOCAL DEMO · NOT LIVE</span></div>
+  <div class="notice">Messages in this demonstration stay in this browser session. No doctor receives them yet. The production version will route messages through a secured backend and support delayed delivery when a connection is unavailable.</div>
+  <div class="card chat-layout" style="margin-top:16px">
+    <div class="chat-list"><h3>Conversations</h3><div class="list-row" style="cursor:pointer"><div><strong class="small">Earth Medical Team</strong><div class="muted small">Mission medical support</div></div><span class="tag green">Demo</span></div><div class="list-row"><div><strong class="small">Mission Medical Officer</strong><div class="muted small">On-board support</div></div><span class="tag blue">Local</span></div><p class="muted small" style="margin-top:15px">Delivery states planned: queued, sent, delivered, read and failed.</p></div>
+    <div class="chat-window"><div><h3>Earth Medical Team</h3><span class="muted small">Secure channel planned · Demo conversation</span></div><div class="messages" id="messages"><div class="message">Hello, Earth Medical Team. This is a sample conversation in the AstroCare prototype.<small>Demo message · 09:10</small></div><div class="message mine">Message received in the local demonstration interface. A live backend connection is not configured yet.<small>Demo reply · 09:12</small></div></div><form class="chat-compose" id="chatForm"><input id="chatInput" placeholder="Write a message..." autocomplete="off"><button class="btn primary">Send</button></form></div>
   </div>
-</section>
-
-<section class="page" id="family">
-  <div class="page-head"><div><div class="eyebrow">SOCIAL SUPPORT / WELLBEING</div><h1>Family & Trusted Connections</h1><p class="sub">Support social connection through family check-ins, calls and simple activities.</p></div><span class="tag amber">LOCAL DEVICE STORAGE</span></div>
-  <div class="notice">Family contact can support wellbeing, especially during isolation. This prototype can save contact details locally, but voice/video calls and cross-device messages require a secure communications service and an internet connection. Games and check-ins are supportive activities, not mental-health treatment.</div>
-  <div class="grid two" style="margin-top:16px">
-    <div class="card"><h2>Trusted contacts</h2><form id="familyForm"><div class="field"><label>Contact name</label><input id="familyName" required maxlength="70" placeholder="Family member or trusted person"></div><div class="field"><label>Phone number</label><input id="familyPhone" type="tel" required maxlength="30" placeholder="Include country code"></div><button class="btn primary" type="submit">Add contact</button></form><div id="familyContacts" class="list" style="margin-top:14px"><p class="muted small">No contacts added.</p></div></div>
-    <div class="card"><h2>Wellbeing check-in</h2><p class="sub" style="margin-bottom:14px">A private prompt to help users reflect and decide whether they want to contact someone.</p><label for="moodSelect">How are you feeling today?</label><select id="moodSelect"><option>Good</option><option>Okay</option><option>Stressed</option><option>Lonely</option><option>Low</option></select><div class="field" style="margin-top:12px"><label>Would you like to connect with someone?</label><select id="connectChoice"><option>Not right now</option><option>Family or friend</option><option>Healthcare professional</option></select></div><button class="btn primary" onclick="saveWellbeingCheckin()">Save check-in</button><p id="moodFeedback" class="muted small" style="margin-top:12px">Your check-in stays on this device in this prototype.</p></div>
-  </div>
-  <div class="card" style="margin-top:16px"><div class="section-row" style="margin-top:0"><h2>Take a short break: memory match</h2><span class="tag green">Mini-game</span></div><p class="sub" style="margin-bottom:12px">Find the matching pairs. This is a simple engagement activity, not a clinical cognitive test.</p><div id="memoryGame" class="body-buttons"></div><p id="gameStatus" class="muted small" aria-live="polite">Select two cards to begin.</p><button class="btn" onclick="startMemoryGame()">Restart game</button></div>
 </section>
 
 <section class="page" id="crew">
-  <div class="page-head"><div><div class="eyebrow">PERSONAL CARE NETWORK</div><h1>My Care Network</h1><p class="sub">Keep contact notes on this device. This is not a verified clinician directory.</p></div><button class="btn primary" onclick="openModal('crewModal')">＋ Add profile</button></div>
-  <div class="notice">These contact notes are stored only in this browser. They do not grant access to patient records or represent verified clinicians.</div>
+  <div class="page-head"><div><div class="eyebrow">MISSION PERSONNEL</div><h1>Crew Management</h1><p class="sub">View the demonstration crew and add crew profile cards.</p></div><button class="btn primary" onclick="openModal('crewModal')">＋ Add crew member</button></div>
+  <div class="notice">In the connected system, invitations and account creation will require an authorised mission administrator. Adding a card here only changes this local demonstration.</div>
   <div class="grid three" id="crewGrid" style="margin-top:17px"></div>
 </section>
 
 <section class="page" id="wellness">
-  <div class="page-head"><div><div class="eyebrow">DAILY HEALTH / PREVENTION</div><h1>Wellness & Lifestyle Tracker</h1><p class="sub">Keep a personal record of activity, food, sleep and selected health measurements.</p></div><span class="tag amber">SAVED ON THIS DEVICE</span></div>
-  <div class="notice">These logs support personal awareness and conversations with a healthcare professional. They do not diagnose conditions or prescribe diets or exercise plans. Entries remain in this browser until secure account synchronisation is implemented.</div>
-  <div class="grid two" style="margin-top:16px">
-    <div class="card"><h2>Log exercise</h2><form id="exerciseForm"><div class="field"><label>Activity</label><select id="exerciseType" required><option value="">Choose activity</option><option>Walking</option><option>Running</option><option>Cycling</option><option>Strength training</option><option>Stretching / mobility</option><option>Sports</option><option>Other</option></select></div><div class="form-grid"><div class="field"><label>Duration (minutes)</label><input id="exerciseMinutes" type="number" min="1" max="1440" required></div><div class="field"><label>Date</label><input id="exerciseDate" type="date" required></div></div><div class="field"><label>Notes (optional)</label><input id="exerciseNotes" maxlength="180" placeholder="How did the activity feel?"></div><button class="btn primary" type="submit">Save activity</button></form></div>
-    <div class="card"><h2>Log food / hydration</h2><form id="dietForm"><div class="field"><label>Entry type</label><select id="dietType"><option>Breakfast</option><option>Lunch</option><option>Dinner</option><option>Snack</option><option>Water / hydration</option></select></div><div class="field"><label>What did you have?</label><input id="dietEntry" maxlength="180" required placeholder="Describe food or drink"></div><div class="field"><label>Date and time</label><input id="dietDate" type="datetime-local" required></div><button class="btn primary" type="submit">Save food log</button></form></div>
-  </div>
-  <div class="card" style="margin-top:16px"><h2>Record a health measurement</h2><form id="healthLogForm" class="form-grid"><div class="field"><label>Measurement</label><select id="healthMetric"><option>Heart rate</option><option>SpO₂ estimate</option><option>Temperature</option><option>Blood pressure</option><option>Weight</option><option>Other</option></select></div><div class="field"><label>Value</label><input id="healthValue" required maxlength="40" placeholder="e.g. 72"></div><div class="field"><label>Unit</label><input id="healthUnit" maxlength="20" placeholder="e.g. bpm, %, °C, mmHg"></div><div class="field"><label>Data source</label><select id="healthSource"><option>Manual entry</option><option>Arduino sensor prototype</option><option>Connected health device</option><option>Imported health record</option><option>Simulated demonstration</option></select></div><div class="field full"><label>Context (optional)</label><input id="healthContext" maxlength="180" placeholder="Resting, after activity, device used, etc."></div><div class="field full"><button class="btn primary" type="submit">Save measurement</button></div></form></div>
-  <div class="section-row"><h2>Recent activity and health log</h2><button class="btn" type="button" onclick="clearLifestyleLogs()">Clear local logs</button></div>
-  <div class="grid three"><div class="card"><div class="metric-top">Exercise entries <span class="tag blue">Personal log</span></div><div class="metric-value" id="exerciseCount">0</div><div class="metric-foot">Saved on this device</div></div><div class="card"><div class="metric-top">Food entries <span class="tag blue">Personal log</span></div><div class="metric-value" id="dietCount">0</div><div class="metric-foot">Saved on this device</div></div><div class="card"><div class="metric-top">Health measurements <span class="tag blue">Personal log</span></div><div class="metric-value" id="healthCount">0</div><div class="metric-foot">Source-labelled records</div></div></div>
-  <div class="grid two" style="margin-top:16px"><div class="card"><h3>Exercise history</h3><div id="exerciseHistory" class="list"><p class="muted small">No exercise entries yet.</p></div></div><div class="card"><h3>Food & hydration history</h3><div id="dietHistory" class="list"><p class="muted small">No food entries yet.</p></div></div></div>
-  <div class="card" style="margin-top:16px"><h3>Health measurement history</h3><div class="table-wrap"><table><thead><tr><th>DATE</th><th>MEASUREMENT</th><th>VALUE</th><th>SOURCE</th><th>CONTEXT</th></tr></thead><tbody id="healthHistory"><tr><td colspan="5" class="muted">No measurements recorded.</td></tr></tbody></table></div></div>
+  <div class="page-head"><div><div class="eyebrow">CREW WELLBEING</div><h1>Crew Wellness</h1><p class="sub">A place for voluntary check-ins, sleep records and exercise summaries.</p></div></div>
+  <div class="grid three"><div class="card"><div class="metric-icon">☾</div><h3 style="margin-top:12px">Sleep log</h3><p class="sub">Record sleep duration, schedule and subjective rest quality.</p><span class="tag blue">Manual entry planned</span></div><div class="card"><div class="metric-icon">⌁</div><h3 style="margin-top:12px">Exercise log</h3><p class="sub">Record exercise sessions and activity completed during the mission.</p><span class="tag blue">Manual entry planned</span></div><div class="card"><div class="metric-icon">♡</div><h3 style="margin-top:12px">Wellness check-in</h3><p class="sub">Private self-reported mood, stress and fatigue check-ins.</p><span class="tag blue">Private by default</span></div></div>
 </section>
 
 <section class="page" id="inventory">
-  <div class="page-head"><div><div class="eyebrow">HEALTH EDUCATION</div><h1>Health Resources</h1><p class="sub">A planned collection of reviewed health education resources and service information.</p></div><button class="btn" onclick="toast('Inventory editing will be connected to the backend in a later phase.')">＋ Add item</button></div>
+  <div class="page-head"><div><div class="eyebrow">SUPPLY READINESS</div><h1>Medical Inventory</h1><p class="sub">Example inventory list for the mission prototype.</p></div><button class="btn" onclick="toast('Inventory editing will be connected to the backend in a later phase.')">＋ Add item</button></div>
   <div class="card table-wrap"><table><thead><tr><th>ITEM</th><th>QUANTITY</th><th>STATUS</th><th>NOTE</th></tr></thead><tbody><tr><td>First-aid kit</td><td>4</td><td><span class="tag green">Available</span></td><td class="muted">Demo stock</td></tr><tr><td>Pulse oximeter</td><td>2</td><td><span class="tag green">Available</span></td><td class="muted">Device availability only</td></tr><tr><td>Digital thermometer</td><td>3</td><td><span class="tag green">Available</span></td><td class="muted">Demo stock</td></tr><tr><td>Medical gloves</td><td>20</td><td><span class="tag amber">Monitor stock</span></td><td class="muted">Demo stock</td></tr></tbody></table></div>
 </section>
 
 <section class="page" id="reports">
-  <div class="page-head"><div><div class="eyebrow">PERSONAL HEALTH RECORDS</div><h1>Health Summary</h1><p class="sub">A planned workspace for personal health history, measurement trends and clinician-approved summaries.</p></div><button class="btn" onclick="toast('Report export will be implemented with stored mission records.')">Export report</button></div>
-  <div class="card"><h2>Report centre</h2><p class="sub">Reports will combine timestamped health records, medical requests, environmental measurements and clinician notes. Each report will identify whether data is simulated, manually entered or sensor-generated.</p><div class="list" style="margin-top:15px"><div class="list-row"><span>Daily personal health summary</span><span class="tag blue">Planned</span></div><div class="list-row"><span>Medical request history</span><span class="tag blue">Planned</span></div><div class="list-row"><span>Space-medicine learning summary</span><span class="tag blue">Planned</span></div></div></div>
+  <div class="page-head"><div><div class="eyebrow">MISSION RECORDS</div><h1>Mission Reports</h1><p class="sub">A future workspace for authorised health summaries and mission reports.</p></div><button class="btn" onclick="toast('Report export will be implemented with stored mission records.')">Export report</button></div>
+  <div class="card"><h2>Report centre</h2><p class="sub">Reports will combine timestamped health records, medical requests, environmental measurements and clinician notes. Each report will identify whether data is simulated, manually entered or sensor-generated.</p><div class="list" style="margin-top:15px"><div class="list-row"><span>Daily crew health summary</span><span class="tag blue">Planned</span></div><div class="list-row"><span>Medical request history</span><span class="tag blue">Planned</span></div><div class="list-row"><span>Environmental exposure summary</span><span class="tag blue">Planned</span></div></div></div>
 </section>
 
 <section class="page" id="profile">
-  <div class="page-head"><div><div class="eyebrow">ACCOUNT / PERSONAL DETAILS</div><h1>My Health Profile</h1><p class="sub">Update the profile shown in the sidebar.</p></div></div>
+  <div class="page-head"><div><div class="eyebrow">ACCOUNT / PERSONAL DETAILS</div><h1>My Astronaut Profile</h1><p class="sub">Update the demonstration profile shown in the sidebar.</p></div></div>
   <div class="card" style="max-width:850px">
-    <div class="profile-large"><div class="avatar big" id="profileAvatar">AM</div><div><h2 id="profileDisplayName" style="margin:0 0 5px">Your profile</h2><p class="sub">Account profile · ID unavailable</p><label class="btn" for="photoInput" style="display:inline-block;margin-top:10px;cursor:pointer">Upload profile photo</label><input type="file" id="photoInput" accept="image/*" hidden></div></div>
+    <div class="profile-large"><div class="avatar big" id="profileAvatar">AM</div><div><h2 id="profileDisplayName" style="margin:0 0 5px">Alex Morgan</h2><p class="sub">Mission Specialist · Crew ID AC-001</p><label class="btn" for="photoInput" style="display:inline-block;margin-top:10px;cursor:pointer">Upload profile photo</label><input type="file" id="photoInput" accept="image/*" hidden></div></div>
     <form id="profileForm"><div class="form-grid">
-      <div class="field"><label>Full name</label><input id="profileName" value="Your profile" required></div>
-      <div class="field"><label>Individual ID</label><input value="Assigned after account setup" disabled></div>
-      <div class="field"><label>Your role (optional)</label><input id="profileRole" value="Individual"></div>
-      <div class="field"><label>Community / organisation (optional)</label><input id="profileMission" placeholder="Enter if relevant"></div>
+      <div class="field"><label>Full name</label><input id="profileName" value="Alex Morgan" required></div>
+      <div class="field"><label>Astronaut ID</label><input value="AC-001" disabled></div>
+      <div class="field"><label>Mission role</label><input id="profileRole" value="Mission Specialist"></div>
+      <div class="field"><label>Mission assignment</label><input id="profileMission" value="Deep Space Simulation"></div>
       <div class="field"><label>Nationality</label><input id="profileNationality" placeholder="Enter nationality"></div>
       <div class="field"><label>Contact email</label><input id="profileEmail" type="email" placeholder="name@example.com"></div>
     </div><button class="btn primary" type="submit">Save profile changes</button></form>
-    <p class="muted small" style="margin-top:14px">Privacy note: profile details are currently saved on this device only. Cross-device profile synchronisation is not enabled.</p>
+    <p class="muted small" style="margin-top:14px">Demo note: changes are stored in this browser only. A real account, secure photo storage and profile permissions will be implemented through Supabase.</p>
   </div>
 </section>
-<footer>ASTROCARE 360 · GLOBAL HEALTH & CARE CONNECTION · PROTOTYPE INTERFACE</footer>
+<footer>ASTROCARE 360 · SPACE HEALTH & MISSION SUPPORT · PROTOTYPE INTERFACE</footer>
 </div>
 </main>
 </div>
@@ -410,18 +294,18 @@ footer{text-align:center;color:#64748b;font-size:10px;padding:25px}
 
 <div id="crewModal" style="display:none;position:fixed;inset:0;background:#0009;z-index:30;place-items:center;padding:18px">
   <div class="card" style="width:min(480px,100%);background:#161b22">
-    <div class="page-head" style="margin-bottom:15px"><div><h2>Add profile</h2><p class="sub">Add a contact note saved only in this browser.</p></div><button class="btn" onclick="closeModal('crewModal')">✕</button></div>
-    <form id="crewForm"><div class="field"><label>Full name</label><input id="crewName" required placeholder="Person name"></div><div class="field"><label>Relationship / Care role</label><input id="crewRole" required placeholder="e.g. Patient, caregiver, clinician"></div><div class="field"><label>Local contact reference</label><input id="crewId" required placeholder="e.g. AC-004"></div><div class="field"><label>Profile photo (optional)</label><input type="file" id="crewPhoto" accept="image/*"></div><button class="btn primary" type="submit">Add profile</button></form>
+    <div class="page-head" style="margin-bottom:15px"><div><h2>Add crew member</h2><p class="sub">Create a local demonstration crew card.</p></div><button class="btn" onclick="closeModal('crewModal')">✕</button></div>
+    <form id="crewForm"><div class="field"><label>Full name</label><input id="crewName" required placeholder="Crew member name"></div><div class="field"><label>Role</label><input id="crewRole" required placeholder="e.g. Flight Engineer"></div><div class="field"><label>Crew ID</label><input id="crewId" required placeholder="e.g. AC-004"></div><div class="field"><label>Profile photo (optional)</label><input type="file" id="crewPhoto" accept="image/*"></div><button class="btn primary" type="submit">Add crew member</button></form>
   </div>
 </div>
 
 <script>
-const pageNames={overview:"Overview",body:"Body Systems",triage:"Health Check-In",firstaid:"Offline First Aid",family:"Family & Connection",vitals:"Health Measurements",hazards:"Space Medicine Insights",library:"Health Library",chat:"Care Connection",crew:"My Care Network",wellness:"Wellness & Lifestyle",inventory:"Health Resources",reports:"Health Summary",profile:"My Health Profile"};
+const pageNames={overview:"Overview",body:"Body Monitoring",triage:"Medical Triage",vitals:"Vital Signs",hazards:"Space Health Risks",library:"Medical Library",chat:"Earth Connection",crew:"Crew Management",wellness:"Crew Wellness",inventory:"Medical Inventory",reports:"Mission Reports",profile:"My Profile"};
 function showPage(id){
  document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id===id));
  document.querySelectorAll('.nav-btn[data-page]').forEach(b=>b.classList.toggle('active',b.dataset.page===id));
  document.getElementById('pageCrumb').textContent=pageNames[id]||id;
- window.scrollTo(0,0);
+ window.scrollTo({top:0,behavior:'smooth'});
 }
 document.querySelectorAll('.nav-btn[data-page]').forEach(b=>b.addEventListener('click',()=>showPage(b.dataset.page)));
 document.querySelectorAll('[data-open-profile]').forEach(b=>b.addEventListener('click',()=>showPage('profile')));
@@ -430,7 +314,7 @@ updateClock();setInterval(updateClock,1000);
 let toastTimer;function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.style.display='block';clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.style.display='none',3000)}
 const bodyInfo={
  "Cardiovascular system":["The heart and blood vessels move blood around the body, delivering oxygen and nutrients to tissues.",["Heart rate — requires a suitable pulse sensor or ECG.","Blood pressure — requires a validated blood-pressure device.","Heart rhythm — requires appropriate ECG equipment and clinical interpretation."]],
- "Respiratory system":["The lungs and airways help bring oxygen into the body and remove carbon dioxide.",["Oxygen saturation — estimated by a suitable pulse oximeter.","Respiratory rate — counted or measured with suitable equipment.","Breathing symptoms — reported by the person and assessed clinically."]],
+ "Respiratory system":["The lungs and airways help bring oxygen into the body and remove carbon dioxide.",["Oxygen saturation — estimated by a suitable pulse oximeter.","Respiratory rate — counted or measured with suitable equipment.","Breathing symptoms — reported by the astronaut and assessed clinically."]],
  "Nervous system":["The brain, spinal cord and nerves coordinate movement, sensation, thinking and many automatic body functions.",["Vision changes — report and assess with appropriate eye examinations.","Balance and dizziness — symptom report and suitable functional assessment.","Sleep and cognitive performance — structured records and validated tests."]],
  "Musculoskeletal system":["Bones, muscles and joints support the body and enable movement.",["Exercise and movement — activity sensors or exercise logs.","Muscle function — suitable strength and functional assessments.","Bone health — clinical assessment; not measured by a basic wearable sensor."]],
  "Digestive system":["The digestive system processes food, absorbs nutrients and removes waste.",["Appetite and nausea — self-reported symptoms.","Nutrition — food and dietary records.","Digestive symptoms — clinical review when needed."]],
@@ -443,11 +327,11 @@ const terms=[
  {term:"Hypoxia",cat:"Respiratory",simple:"A condition in which body tissues do not receive enough oxygen to work properly.",detail:"Hypoxia can have different causes and can be serious. A pulse oximeter reading is only one piece of information; symptoms and clinical assessment matter too.",related:"Oxygen saturation · Respiratory system · Hypoxemia"},
  {term:"Arrhythmia",cat:"Cardiovascular",simple:"A heartbeat that is too fast, too slow or irregular.",detail:"Some rhythm changes are harmless, while others need medical attention. An ECG and clinician assessment may be needed to identify the rhythm.",related:"Heart rate · ECG · Cardiovascular system"},
  {term:"Microgravity",cat:"Space medicine",simple:"An environment in which objects and people appear to experience very little weight.",detail:"Microgravity changes how the body adapts to movement, fluid distribution, muscles and bones. It is not the same as having no gravity anywhere.",related:"Bone density · Muscle atrophy · Fluid shift"},
- {term:"Spaceflight-Associated Neuro-ocular Syndrome (SANS)",cat:"Space medicine",simple:"A group of eye and vision changes observed in some persons during or after spaceflight.",detail:"SANS is an area of ongoing research. Assessment requires appropriate eye examinations and medical expertise; it cannot be diagnosed by a simple website check.",related:"Vision · Optic disc · Microgravity"},
+ {term:"Spaceflight-Associated Neuro-ocular Syndrome (SANS)",cat:"Space medicine",simple:"A group of eye and vision changes observed in some astronauts during or after spaceflight.",detail:"SANS is an area of ongoing research. Assessment requires appropriate eye examinations and medical expertise; it cannot be diagnosed by a simple website check.",related:"Vision · Optic disc · Microgravity"},
  {term:"SpO₂",cat:"Respiratory",simple:"An estimate of the percentage of haemoglobin in the blood carrying oxygen, usually measured with a pulse oximeter.",detail:"The reading can be affected by movement, circulation, device fit and other factors. It is not a complete measure of breathing or overall health.",related:"Pulse oximeter · Hypoxia · Respiratory system"},
  {term:"Osteoporosis",cat:"Space medicine",simple:"A condition in which bones become less dense and more likely to fracture.",detail:"Reduced mechanical loading during spaceflight can contribute to bone loss. Bone health is assessed with appropriate clinical methods, not a basic movement sensor.",related:"Bone density · Microgravity · Musculoskeletal system"},
  {term:"ECG",cat:"Cardiovascular",simple:"An electrocardiogram is a test that records the electrical activity of the heart.",detail:"An ECG can help trained clinicians assess heart rhythm and electrical patterns. The recording needs appropriate interpretation.",related:"Arrhythmia · Heart rate · Cardiovascular system"},
- {term:"Circadian rhythm",cat:"Neurology",simple:"The body's internal timing system that helps organise sleep and other daily patterns.",detail:"Light exposure, schedules and daily routines, light exposure and work schedules can affect sleep timing. Consistent routines may support sleep health.",related:"Sleep · Fatigue · Light exposure"}
+ {term:"Circadian rhythm",cat:"Neurology",simple:"The body's internal timing system that helps organise sleep and other daily patterns.",detail:"Light exposure, schedules and mission operations can affect sleep timing. Consistent routines and mission-approved countermeasures can support sleep health.",related:"Sleep · Fatigue · Light exposure"}
 ];
 let currentFilter="All";
 function renderLibrary(){
@@ -458,433 +342,49 @@ function renderLibrary(){
 document.getElementById('librarySearch').addEventListener('input',renderLibrary);
 function filterLibrary(c){currentFilter=c;renderLibrary()}
 renderLibrary();
-let crew=[];
+let crew=[
+ {name:"Alex Morgan",role:"Mission Specialist",id:"AC-001",photo:""},
+ {name:"Jordan Lee",role:"Flight Engineer",id:"AC-002",photo:""},
+ {name:"Samira Okafor",role:"Mission Scientist",id:"AC-003",photo:""}
+];
 function initials(n){return n.split(/\s+/).map(x=>x[0]).join('').slice(0,2).toUpperCase()}
-function avatarMarkup(person,cls="avatar"){return `<div class="${cls}">${person.photo?`<img src="${person.photo}" alt="Profile photo of ${person.name}">`:initials(person.name)}</div>`}
+function avatarMarkup(person,cls="avatar"){return `<div class="${cls}">${person.photo?`<img src="${person.photo}" alt="Profile photo of ${escapeHTML(person.name)}">`:initials(person.name)}</div>`}
 function renderCrew(){
- document.getElementById('crewGrid').innerHTML=crew.length?crew.map((p,i)=>`<div class="card"><div class="crew-card">${avatarMarkup(p)}<div class="info"><strong>${escapeHTML(p.name)}</strong><small>${escapeHTML(p.role)} · ${escapeHTML(p.id)}</small></div></div></div>`).join(''):'<div class="empty">No care-network profiles are connected to this account yet.</div>';
- document.getElementById('crewCount').textContent=crew.length?crew.length+' connected':'No connected profiles';
- const select=document.getElementById('triagePerson');if(select)select.innerHTML='<option value="">No connected person</option>';
+ document.getElementById('crewGrid').innerHTML=crew.map((p,i)=>`<div class="card"><div class="crew-card">${avatarMarkup(p)}<div class="info"><strong>${escapeHTML(p.name)}</strong><small>${escapeHTML(p.role)} · ${escapeHTML(p.id)}</small></div><span class="tag green">Demo</span></div><div style="display:flex;justify-content:flex-end;margin-top:14px"><button class="btn" onclick="removeCrew(${i})">Remove card</button></div></div>`).join('');
+ document.getElementById('crewCount').textContent=crew.length+' registered';
+ const select=document.getElementById('triagePerson');const prev=select.value;select.innerHTML=crew.map(p=>`<option>${escapeHTML(p.name)}</option>`).join('');if([...select.options].some(o=>o.value===prev))select.value=prev;
 }
 function escapeHTML(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
-function removeCrew(i){if(i===0){toast('Your own demo profile cannot be removed here.');return}crew.splice(i,1);renderCrew();toast('Demo crew card removed.')}
+function removeCrew(i){if(i===0){toast('The primary demo profile cannot be removed here.');return}crew.splice(i,1);renderCrew();toast('Demo crew card removed.')}
 function openModal(id){document.getElementById(id).style.display='grid'}
 function closeModal(id){document.getElementById(id).style.display='none'}
 document.getElementById('crewForm').addEventListener('submit',e=>{
  e.preventDefault();const name=document.getElementById('crewName').value.trim(),role=document.getElementById('crewRole').value.trim(),id=document.getElementById('crewId').value.trim();
  if(crew.some(p=>p.id.toLowerCase()===id.toLowerCase())){toast('That demo crew ID already exists.');return}
- const file=document.getElementById('crewPhoto').files[0];const add=photo=>{crew.push({name,role,id,photo:photo||''});renderCrew();e.target.reset();closeModal('crewModal');toast('Profile added to this local demo.')};
+ const file=document.getElementById('crewPhoto').files[0];const add=photo=>{crew.push({name,role,id,photo:photo||''});renderCrew();e.target.reset();closeModal('crewModal');toast('Crew member added to this local demo.')};
  if(file){const r=new FileReader();r.onload=()=>add(r.result);r.readAsDataURL(file)}else add('');
 });
-function saveLocalProfile(){
- const name=document.getElementById('profileName').value.trim()||'User';
- const role=document.getElementById('profileRole').value.trim()||'Person';
- const nationality=document.getElementById('profileNationality').value.trim();
- const mission=document.getElementById('profileMission').value.trim();
- const email=document.getElementById('profileEmail').value.trim();
- const profile={name,role,nationality,organisation:mission,email,photo:localStorage.getItem('astrocare_profile_photo')||''};
- localStorage.setItem('astrocare_profile',JSON.stringify(profile));
- document.getElementById('profileDisplayName').textContent=name;
- document.getElementById('miniName').textContent=name;
- document.querySelector('#profile .profile-large .sub').textContent=role+' · Profile ID Not assigned';
- crew[0]={...crew[0],name,role,id:'Not assigned',photo:profile.photo};
- if(profile.photo){
-  document.getElementById('profileAvatar').innerHTML=`<img src="${profile.photo}" alt="Profile photo">`;
-  document.getElementById('miniAvatar').innerHTML=`<img src="${profile.photo}" alt="Profile photo">`;
- }else{
-  document.getElementById('profileAvatar').textContent=initials(name);
-  document.getElementById('miniAvatar').textContent=initials(name);
- }
- document.querySelector('.profile-mini small').textContent=role;
- renderCrew();
- toast('Profile saved on this device.');
-}
-document.getElementById('profileForm').addEventListener('submit',e=>{e.preventDefault();saveLocalProfile()});
+document.getElementById('profileForm').addEventListener('submit',e=>{
+ e.preventDefault();const name=document.getElementById('profileName').value.trim()||'Astronaut';document.getElementById('profileDisplayName').textContent=name;document.getElementById('miniName').textContent=name;
+ const p=crew[0];p.name=name;p.role=document.getElementById('profileRole').value||'Crew member';document.getElementById('miniRole').textContent=p.role;renderCrew();if(!p.photo){document.getElementById('miniAvatar').textContent=initials(name);document.getElementById('profileAvatar').textContent=initials(name)}
+ toast('Profile updated in this browser demo.');
+});
 document.getElementById('photoInput').addEventListener('change',e=>{
- const file=e.target.files[0];if(!file)return;
- if(!file.type.startsWith('image/')){toast('Please choose an image file.');return}
- if(file.size>3*1024*1024){toast('Choose an image smaller than 3 MB.');return}
- const reader=new FileReader();reader.onload=()=>{
-  localStorage.setItem('astrocare_profile_photo',reader.result);
-  document.getElementById('profileAvatar').innerHTML=`<img src="${reader.result}" alt="Profile photo">`;
-  document.getElementById('miniAvatar').innerHTML=`<img src="${reader.result}" alt="Profile photo">`;
-  const profile=JSON.parse(localStorage.getItem('astrocare_profile')||'{}');profile.photo=reader.result;localStorage.setItem('astrocare_profile',JSON.stringify(profile));
-  if(crew[0])crew[0].photo=reader.result;renderCrew();toast('Profile photo saved on this device.');
- };reader.readAsDataURL(file);
+ const file=e.target.files[0];if(!file)return;if(!file.type.startsWith('image/')){toast('Please choose an image file.');return}
+ const reader=new FileReader();reader.onload=()=>{const url=reader.result;crew[0].photo=url;document.getElementById('profileAvatar').innerHTML=`<img src="${url}" alt="Profile photo">`;document.getElementById('miniAvatar').innerHTML=`<img src="${url}" alt="Profile photo">`;renderCrew();toast('Profile photo updated in this browser demo.')};reader.readAsDataURL(file);
 });
-function loadLocalProfile(){
- try{
-  const p=JSON.parse(localStorage.getItem('astrocare_profile')||'null');if(!p)return;
-  document.getElementById('profileName').value=p.name||'Your profile';
-  document.getElementById('profileRole').value=p.role||'Individual';
-  document.getElementById('profileMission').value=p.organisation||p.mission||'';
-  document.getElementById('profileNationality').value=p.nationality||'';
-  document.getElementById('profileEmail').value=p.email||'';
-  document.getElementById('profileDisplayName').textContent=p.name||'Your profile';
-  document.getElementById('miniName').textContent=p.name||'Your profile';
-  document.querySelector('#profile .profile-large .sub').textContent=(p.role||'Individual')+' · Profile ID Not assigned';
-  if(p.photo){document.getElementById('profileAvatar').innerHTML=`<img src="${p.photo}" alt="Profile photo">`;document.getElementById('miniAvatar').innerHTML=`<img src="${p.photo}" alt="Profile photo">`;}
-  else{document.getElementById('profileAvatar').textContent=initials(p.name||'Your profile');document.getElementById('miniAvatar').textContent=initials(p.name||'Your profile');}
-  document.querySelector('.profile-mini small').textContent=p.role||'Individual';
-  if(crew[0])crew[0]={...crew[0],name:p.name||'Your profile',role:p.role||'Individual',photo:p.photo||''};
-  renderCrew();
- }catch(err){console.warn('Could not load local profile:',err)}
-}
-
-
+document.getElementById('chatForm').addEventListener('submit',e=>{
+ e.preventDefault();const input=document.getElementById('chatInput'),value=input.value.trim();if(!value)return;
+ const msg=document.createElement('div');msg.className='message mine';msg.textContent=value;const stamp=document.createElement('small');stamp.textContent='Local demo · not transmitted';msg.appendChild(stamp);document.getElementById('messages').appendChild(msg);input.value='';document.getElementById('messages').scrollTop=document.getElementById('messages').scrollHeight;toast('Message added locally. Backend delivery is not connected.');
+});
 document.getElementById('triageForm').addEventListener('submit',e=>{
- e.preventDefault();document.getElementById('triageResult').textContent='Online triage submission is not enabled yet. This form does not send information to a clinician. For urgent concerns, contact local emergency services or a qualified healthcare professional.';
- toast('Triage service is not connected. Nothing was sent.');
+ e.preventDefault();const text=document.getElementById('triageText').value.trim();if(!text){toast('Please describe the concern first.');return}
+ document.getElementById('triageResult').textContent='Demo request prepared for '+document.getElementById('triagePerson').value+'. No clinician has received this request because the backend is not connected.';
+ toast('Demo medical request prepared.');
 });
-// Local-first lifestyle logs. Records are explicitly source-labelled and are not sent to a clinician.
-const localStore={get(k){try{return JSON.parse(localStorage.getItem(k)||'[]')}catch{return[]}},set(k,v){localStorage.setItem(k,JSON.stringify(v))}};
-function safeText(v){return escapeHTML(String(v??''))}
-function renderLifestyle(){
- const ex=localStore.get('ac360_exercise'),diet=localStore.get('ac360_diet'),health=localStore.get('ac360_health');
- document.getElementById('exerciseCount').textContent=ex.length;document.getElementById('dietCount').textContent=diet.length;document.getElementById('healthCount').textContent=health.length;
- document.getElementById('exerciseHistory').innerHTML=ex.length?ex.slice().reverse().slice(0,8).map(x=>`<div class="list-row"><div><strong class="small">${safeText(x.type)}</strong><div class="muted small">${safeText(x.date)} · ${safeText(x.minutes)} min</div><div class="muted small">${safeText(x.notes)}</div></div><span class="tag blue">Manual</span></div>`).join(''):'<p class="muted small">No exercise entries yet.</p>';
- document.getElementById('dietHistory').innerHTML=diet.length?diet.slice().reverse().slice(0,8).map(x=>`<div class="list-row"><div><strong class="small">${safeText(x.type)}</strong><div class="muted small">${safeText(x.entry)}</div><div class="muted small">${safeText(x.date)}</div></div><span class="tag blue">Manual</span></div>`).join(''):'<p class="muted small">No food entries yet.</p>';
- document.getElementById('healthHistory').innerHTML=health.length?health.slice().reverse().slice(0,12).map(x=>`<tr><td>${safeText(x.date)}</td><td>${safeText(x.metric)}</td><td>${safeText(x.value)} ${safeText(x.unit)}</td><td><span class="tag blue">${safeText(x.source)}</span></td><td>${safeText(x.context)}</td></tr>`).join(''):'<tr><td colspan="5" class="muted">No measurements recorded.</td></tr>';
-}
-document.getElementById('exerciseDate').value=new Date().toISOString().slice(0,10);
-document.getElementById('dietDate').value=new Date().toISOString().slice(0,16);
-document.getElementById('exerciseForm').addEventListener('submit',e=>{e.preventDefault();const a=localStore.get('ac360_exercise');a.push({type:document.getElementById('exerciseType').value,minutes:document.getElementById('exerciseMinutes').value,date:document.getElementById('exerciseDate').value,notes:document.getElementById('exerciseNotes').value.trim()});localStore.set('ac360_exercise',a);e.target.reset();document.getElementById('exerciseDate').value=new Date().toISOString().slice(0,10);renderLifestyle();toast('Exercise entry saved on this device.')});
-document.getElementById('dietForm').addEventListener('submit',e=>{e.preventDefault();const a=localStore.get('ac360_diet');a.push({type:document.getElementById('dietType').value,entry:document.getElementById('dietEntry').value.trim(),date:document.getElementById('dietDate').value});localStore.set('ac360_diet',a);e.target.reset();document.getElementById('dietDate').value=new Date().toISOString().slice(0,16);renderLifestyle();toast('Food entry saved on this device.')});
-document.getElementById('healthLogForm').addEventListener('submit',e=>{e.preventDefault();const a=localStore.get('ac360_health');a.push({metric:document.getElementById('healthMetric').value,value:document.getElementById('healthValue').value.trim(),unit:document.getElementById('healthUnit').value.trim(),source:document.getElementById('healthSource').value,context:document.getElementById('healthContext').value.trim(),date:new Date().toLocaleString()});localStore.set('ac360_health',a);e.target.reset();renderLifestyle();toast('Measurement saved with its source label.')});
-function clearLifestyleLogs(){if(!confirm('Clear all exercise, food and health measurement logs saved on this device?'))return;['ac360_exercise','ac360_diet','ac360_health'].forEach(k=>localStorage.removeItem(k));renderLifestyle();toast('Local logs cleared.')}
-renderLifestyle();
-// Family contacts and check-ins are local-only in this prototype.
-function renderFamily(){const a=localStore.get('ac360_family');document.getElementById('familyContacts').innerHTML=a.length?a.map((x,i)=>`<div class="list-row"><div><strong class="small">${safeText(x.name)}</strong><div class="muted small">${safeText(x.phone)}</div></div><div style="display:flex;gap:7px"><a class="btn" href="tel:${encodeURIComponent(x.phone)}">Call</a><button class="btn danger" type="button" onclick="removeFamily(${i})">Remove</button></div></div>`).join(''):'<p class="muted small">No contacts added.</p>'}
-document.getElementById('familyForm').addEventListener('submit',e=>{e.preventDefault();const a=localStore.get('ac360_family');a.push({name:document.getElementById('familyName').value.trim(),phone:document.getElementById('familyPhone').value.trim()});localStore.set('ac360_family',a);e.target.reset();renderFamily();toast('Contact saved on this device. Calls depend on your device and network.')});
-function removeFamily(i){const a=localStore.get('ac360_family');a.splice(i,1);localStore.set('ac360_family',a);renderFamily()}
-function saveWellbeingCheckin(){const a=localStore.get('ac360_mood');a.push({mood:document.getElementById('moodSelect').value,connect:document.getElementById('connectChoice').value,date:new Date().toLocaleString()});localStore.set('ac360_mood',a);document.getElementById('moodFeedback').textContent='Check-in saved locally. If you feel unsafe or need urgent help, contact local emergency services or a trusted person.';toast('Wellbeing check-in saved.')}
-renderFamily();
-// Simple non-clinical memory game.
-const gameSymbols=['✦','◈','♡','☾','✚','⌁'];let gameDeck=[],gameOpen=[],gameMatched=0,gameLock=false;
-function startMemoryGame(){gameDeck=[...gameSymbols,...gameSymbols].sort(()=>Math.random()-.5);gameOpen=[];gameMatched=0;gameLock=false;document.getElementById('gameStatus').textContent='Select two cards to begin.';document.getElementById('memoryGame').innerHTML=gameDeck.map((v,i)=>`<button class="btn" style="width:48px;height:44px;font-size:18px" data-card="${i}" onclick="flipMemoryCard(${i})">?</button>`).join('')}
-function flipMemoryCard(i){if(gameLock||gameOpen.includes(i))return;const b=document.querySelector(`[data-card="${i}"]`);if(!b||b.dataset.matched==='1')return;b.textContent=gameDeck[i];gameOpen.push(i);if(gameOpen.length===2){if(gameDeck[gameOpen[0]]===gameDeck[gameOpen[1]]){gameOpen.forEach(n=>{const el=document.querySelector(`[data-card="${n}"]`);el.dataset.matched='1';el.disabled=true});gameMatched+=2;gameOpen=[];if(gameMatched===gameDeck.length)document.getElementById('gameStatus').textContent='Well done — all pairs found!';}else{gameLock=true;setTimeout(()=>{gameOpen.forEach(n=>{const el=document.querySelector(`[data-card="${n}"]`);if(el)el.textContent='?'});gameOpen=[];gameLock=false},700)}}}
-startMemoryGame();
-
 renderCrew();
-
-// Profile details remain local until a profile-sync migration is configured.
-loadLocalProfile();
-</script>
-<script>
-
-// ============================================================
-// ASTROCARE 360 — STEP 3.1: PRIVATE MEDICAL RECORDS
-// Silent anonymous Supabase Auth preserves the no-visible-login
-// experience while enabling auth.uid()-based Row Level Security.
-// ============================================================
-const AC_SUPABASE_URL = 'https://qpmwklyinjlfiubaabse.supabase.co';
-const AC_SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFwbXdrbHlpbmpsZml1YmFhYnNlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTQ2NTc3MjksImV4cCI6MjExMDIzMzcyOX0.H88XAMBPYAOSAYszwEqkiS8SViiDXUt8aegrKySbFaU';
-const AC_STORAGE_BUCKET = 'medical-record-files';
-let acSupabase = null;
-let acSessionUser = null;
-let acRecordsReady = false;
-
-function recordStatus(message, isError=false) {
-  const el = document.getElementById('recordStatus');
-  if (el) { el.textContent = message; el.style.color = isError ? '#ffadb5' : 'var(--muted)'; }
-}
-function recordFormStatus(message, isError=false) {
-  const el = document.getElementById('recordFormStatus');
-  if (el) { el.textContent = message; el.style.color = isError ? '#ffadb5' : '#9ca3af'; }
-}
-function recordConnectionStatus(message, kind='amber') {
-  const el=document.getElementById('recordConnection');
-  if(el){el.className='tag '+kind;el.textContent=message;}
-}
-function getSupabaseError(err) {
-  const msg = err?.message || err?.error_description || 'Unknown connection error';
-  return msg.length > 220 ? msg.slice(0,220)+'…' : msg;
-}
-async function initialiseMedicalRecords() {
-  if (!window.supabase?.createClient) {
-    recordConnectionStatus('Client library unavailable','red');
-    recordStatus('The Supabase client library could not load. Check the internet connection and reload.', true);
-    return;
-  }
-  try {
-    acSupabase = window.supabase.createClient(AC_SUPABASE_URL, AC_SUPABASE_ANON_KEY, {
-      auth: { persistSession:true, autoRefreshToken:true, detectSessionInUrl:true }
-    });
-    let {data:{session},error}=await acSupabase.auth.getSession();
-    if(error) throw error;
-    if(!session?.user) {
-      acRecordsReady=false;
-      recordConnectionStatus('Sign-in required','amber');
-      recordStatus('Sign in to a patient account to access private records.');
-      const list=document.getElementById('medicalRecordsList');
-      if(list) list.innerHTML='<div class="empty">Sign in to load your private medical records.</div>';
-      return;
-    }
-    acSessionUser=session.user;
-    acRecordsReady=true;
-    recordConnectionStatus('Authenticated session','green');
-    recordStatus('Signed-in account session ready.');
-    await loadMedicalRecords();
-  } catch(err) {
-    acRecordsReady=false;
-    recordConnectionStatus('Setup required','red');
-    const detail=getSupabaseError(err);
-    recordStatus('Could not start the private records session. Check Supabase Auth and database policies. Details: '+detail,true);
-    document.getElementById('medicalRecordsList').innerHTML='<div class="empty">Medical records are unavailable until authentication and database policies are configured.</div>';
-  }
-}
-function formatRecordDate(value) {
-  if(!value) return 'Date unavailable';
-  const d=new Date(value);
-  return Number.isNaN(d.getTime()) ? 'Date unavailable' : d.toLocaleString();
-}
-async function loadMedicalRecords() {
-  if(!acSupabase || !acSessionUser) {
-    recordStatus('Waiting for a secure account session…');
-    return;
-  }
-  const list=document.getElementById('medicalRecordsList');
-  list.innerHTML='<div class="empty">Loading your records…</div>';
-  const {data,error}=await acSupabase.from('medical_records')
-    .select('id,patient_id,created_by,record_title,record_content,record_category,is_simulated,created_at,updated_at')
-    .eq('patient_id',acSessionUser.id)
-    .order('created_at',{ascending:false});
-  if(error) {
-    list.innerHTML='<div class="empty">Records could not be loaded.</div>';
-    recordStatus('Database error: '+getSupabaseError(error),true);
-    return;
-  }
-  if(!data?.length) {
-    list.innerHTML='<div class="empty">No records yet. Use the form below to add your first record.</div>';
-    recordStatus('No records found for this account.');
-    return;
-  }
-  list.innerHTML=data.map(r=>`
-    <article class="record-card">
-      <span class="tag blue">${escapeHTML(r.record_category||'Other')}</span>
-      <h3>${escapeHTML(r.record_title)}</h3>
-      <p class="muted small" style="white-space:pre-wrap;line-height:1.6">${escapeHTML((r.record_content||'No details added.').slice(0,850))}${(r.record_content||'').length>850?'…':''}</p>
-      <div class="record-meta"><span class="tag">${r.is_simulated?'Simulated':'User-entered · not clinically verified'}</span><span class="tag">${escapeHTML(formatRecordDate(r.created_at))}</span></div>
-      <div class="record-actions"><button class="btn" type="button" onclick="editMedicalRecord('${r.id}')">Edit</button><button class="btn" type="button" onclick="viewMedicalAttachments('${r.id}')">Attachments</button></div>
-    </article>`).join('');
-  recordStatus(`${data.length} record${data.length===1?'':'s'} loaded for this private account.`);
-}
-async function saveMedicalRecord(event) {
-  event.preventDefault();
-  if(!acSupabase || !acSessionUser) {
-    recordFormStatus('Secure session is not ready. Sign in to your patient account, then try again.',true);
-    return;
-  }
-  const btn=document.getElementById('saveRecordBtn');
-  btn.disabled=true; btn.textContent='Saving…';
-  try {
-    const id=document.getElementById('recordId').value;
-    const payload={
-      patient_id:acSessionUser.id,
-      created_by:acSessionUser.id,
-      record_title:document.getElementById('recordTitle').value.trim(),
-      record_content:document.getElementById('recordContent').value.trim() || null,
-      record_category:document.getElementById('recordCategory').value,
-      is_simulated:false,
-      updated_at:new Date().toISOString()
-    };
-    if(!payload.record_title) throw new Error('Enter a record title.');
-    let saved;
-    if(id) {
-      const result=await acSupabase.from('medical_records').update({
-        record_title:payload.record_title,record_content:payload.record_content,
-        record_category:payload.record_category,updated_at:payload.updated_at
-      }).eq('id',id).eq('patient_id',acSessionUser.id).select('id').single();
-      if(result.error) throw result.error;
-      saved=result.data;
-    } else {
-      const result=await acSupabase.from('medical_records').insert(payload).select('id').single();
-      if(result.error) throw result.error;
-      saved=result.data;
-    }
-    const file=document.getElementById('recordFile').files[0];
-    if(file) await uploadMedicalAttachment(saved.id,file);
-    resetMedicalRecordForm();
-    recordFormStatus('Record saved successfully.');
-    toast('Medical record saved securely.');
-    await loadMedicalRecords();
-  } catch(err) {
-    recordFormStatus('Save failed: '+getSupabaseError(err),true);
-  } finally {
-    btn.disabled=false;btn.textContent='Save record';
-  }
-}
-async function uploadMedicalAttachment(recordId,file) {
-  const allowed=['application/pdf','image/jpeg','image/png'];
-  if(!allowed.includes(file.type)) throw new Error('Attachment must be a PDF, JPG or PNG file.');
-  if(file.size>8*1024*1024) throw new Error('Attachment must be 8 MB or smaller.');
-  const safeName=file.name.replace(/[^a-zA-Z0-9._-]/g,'_').slice(0,120);
-  const path=`${acSessionUser.id}/${recordId}/${Date.now()}_${safeName}`;
-  const up=await acSupabase.storage.from(AC_STORAGE_BUCKET).upload(path,file,{contentType:file.type,upsert:false});
-  if(up.error) throw up.error;
-  const meta=await acSupabase.from('medical_attachments').insert({
-    record_id:recordId,uploaded_by:acSessionUser.id,file_name:file.name,storage_path:path
-  });
-  if(meta.error) {
-    // Remove the uploaded object if its metadata row could not be saved.
-    await acSupabase.storage.from(AC_STORAGE_BUCKET).remove([path]);
-    throw meta.error;
-  }
-}
-function resetMedicalRecordForm() {
-  document.getElementById('medicalRecordForm').reset();
-  document.getElementById('recordId').value='';
-  document.getElementById('recordFormHeading').textContent='Add a medical record';
-  document.getElementById('saveRecordBtn').textContent='Save record';
-}
-async function editMedicalRecord(id) {
-  if(!acSupabase || !acSessionUser) return;
-  const {data,error}=await acSupabase.from('medical_records')
-    .select('id,record_title,record_content,record_category')
-    .eq('id',id).eq('patient_id',acSessionUser.id).single();
-  if(error){toast('Could not open this record: '+getSupabaseError(error));return;}
-  document.getElementById('recordId').value=data.id;
-  document.getElementById('recordTitle').value=data.record_title||'';
-  document.getElementById('recordContent').value=data.record_content||'';
-  document.getElementById('recordCategory').value=data.record_category||'Other';
-  document.getElementById('recordFormHeading').textContent='Edit medical record';
-  document.getElementById('saveRecordBtn').textContent='Update record';
-  document.getElementById('recordFile').value='';
-  document.getElementById('records').scrollIntoView({behavior:'smooth'});
-  recordFormStatus('Editing selected record. Existing attachments are retained.');
-}
-async function viewMedicalAttachments(recordId) {
-  if(!acSupabase || !acSessionUser) return;
-  const {data,error}=await acSupabase.from('medical_attachments')
-    .select('id,file_name,storage_path,created_at')
-    .eq('record_id',recordId).order('created_at',{ascending:false});
-  if(error){toast('Could not load attachments: '+getSupabaseError(error));return;}
-  if(!data?.length){toast('No attachments are linked to this record.');return;}
-  const lines=[];
-  for(const a of data) {
-    const {data:link,error:linkError}=await acSupabase.storage.from(AC_STORAGE_BUCKET).createSignedUrl(a.storage_path,300);
-    if(linkError){lines.push(a.file_name+' — access unavailable');continue;}
-    lines.push(`<a href="${link.signedUrl}" target="_blank" rel="noopener" style="color:var(--blue)">${escapeHTML(a.file_name)}</a>`);
-  }
-  const w=window.open('','_blank');
-  if(w) {
-    w.opener=null;
-    w.document.write('<title>Medical record attachments</title><body style="font:14px Arial;background:#10161e;color:#f3f4f6;padding:24px"><h2>Attachments</h2>'+lines.map(x=>'<p>'+x+'</p>').join('')+'</body>');
-    w.document.close();
-  } else {
-    toast('Allow pop-ups to view attachments.');
-  }
-}
-document.getElementById('medicalRecordForm').addEventListener('submit',saveMedicalRecord);
-// Startup is performed after explicit patient authentication below.
-
-
-
-
-// ---------------- SECURE PATIENT–CLINICIAN MESSAGING ----------------
-let patientActiveConversation=null, patientChatChannel=null;
-function patientChatStatus(message, error=false){const el=document.getElementById('patientChatStatus');if(el){el.textContent=message;el.style.color=error?'#ffadb5':'var(--muted)';}}
-async function initPatientMessaging(){
- if(!acSupabase||!acSessionUser)return;
- patientChatStatus('Loading authorised healthcare professionals…');
- try{
-  const {data:doctors,error}=await acSupabase.rpc('astrocare_list_doctors');
-  if(error)throw error;
-  const select=document.getElementById('patientDoctorSelect');
-  select.innerHTML='<option value="">Choose a healthcare professional</option>';
-  (doctors||[]).forEach(doc=>{const o=document.createElement('option');o.value=doc.doctor_id;o.textContent=doc.display_name||'Healthcare professional';select.appendChild(o)});
-  if(!doctors?.length)patientChatStatus('No authorised healthcare professional accounts are listed yet.');
-  else patientChatStatus('Secure messaging directory loaded.');
-  await loadPatientConversations();
-  if(patientChatChannel)await acSupabase.removeChannel(patientChatChannel);
-  patientChatChannel=acSupabase.channel('patient-care-'+acSessionUser.id)
-   .on('postgres_changes',{event:'*',schema:'public',table:'care_messages'},payload=>{
-     if(patientActiveConversation && payload.new?.conversation_id===patientActiveConversation.id)loadPatientMessages(patientActiveConversation.id);
-     loadPatientConversations();
-   }).subscribe();
- }catch(err){patientChatStatus('Messaging unavailable: '+(err.message||'Database setup required.'),true);document.getElementById('chatConnectionTag').textContent='Setup required';}
-}
-async function loadPatientConversations(){
- if(!acSupabase||!acSessionUser)return;
- const box=document.getElementById('patientConversationList');
- const {data,error}=await acSupabase.from('care_conversations').select('id,doctor_id,status,updated_at').eq('patient_id',acSessionUser.id).order('updated_at',{ascending:false});
- if(error){box.innerHTML='<div class="empty">Could not load conversations.</div>';patientChatStatus('Conversation query failed: '+error.message,true);return;}
- if(!data?.length){box.innerHTML='<div class="empty">No conversations yet.</div>';return;}
- const {data:doctors}=await acSupabase.rpc('astrocare_list_doctors');const names=new Map((doctors||[]).map(x=>[x.doctor_id,x.display_name||'Healthcare professional']));
- box.innerHTML=data.map(c=>`<button type="button" class="btn" style="text-align:left;white-space:normal" onclick="openPatientConversation('${c.id}')"><strong>${escapeHTML(names.get(c.doctor_id)||'Healthcare professional')}</strong><br><span class="muted small">${escapeHTML(c.status)} · ${new Date(c.updated_at).toLocaleString()}</span></button>`).join('');
-}
-async function startPatientConversation(){
- const doctorId=document.getElementById('patientDoctorSelect').value;if(!doctorId){patientChatStatus('Choose an authorised healthcare professional first.',true);return;}
- try{
-  let {data,error}=await acSupabase.from('care_conversations').select('id,doctor_id,status,updated_at').eq('patient_id',acSessionUser.id).eq('doctor_id',doctorId).eq('status','open').maybeSingle();
-  if(error)throw error;
-  if(!data){const result=await acSupabase.from('care_conversations').insert({patient_id:acSessionUser.id,doctor_id:doctorId}).select('id,doctor_id,status,updated_at').single();if(result.error)throw result.error;data=result.data;}
-  const {data:doctors}=await acSupabase.rpc('astrocare_list_doctors');const doc=(doctors||[]).find(x=>x.doctor_id===doctorId);
-  await openPatientConversation(data.id,doc?.display_name||'Healthcare professional');await loadPatientConversations();
- }catch(err){patientChatStatus('Could not start conversation: '+err.message,true);}
-}
-async function openPatientConversation(id){
- patientActiveConversation={id};const {data:conv}=await acSupabase.from('care_conversations').select('doctor_id').eq('id',id).maybeSingle();const {data:docs}=await acSupabase.rpc('astrocare_list_doctors');const doctor=(docs||[]).find(x=>x.doctor_id===conv?.doctor_id);document.getElementById('patientChatTitle').textContent=doctor?.display_name||'Conversation';document.getElementById('patientChatState').textContent='Open';
- document.getElementById('patientMessageInput').disabled=false;document.getElementById('patientSendButton').disabled=false;
- await loadPatientMessages(id);
-}
-async function loadPatientMessages(id){
- const box=document.getElementById('patientMessages');const {data,error}=await acSupabase.from('care_messages').select('id,sender_id,body,created_at,read_at').eq('conversation_id',id).order('created_at',{ascending:true});
- if(error){box.innerHTML='<div class="empty">Messages could not be loaded.</div>';return;}
- box.innerHTML=data?.length?data.map(m=>`<div class="message ${m.sender_id===acSessionUser.id?'mine':''}">${escapeHTML(m.body)}<small>${m.sender_id===acSessionUser.id?'You':'Healthcare professional'} · ${new Date(m.created_at).toLocaleString()}</small></div>`).join(''):'<div class="empty">No messages yet. You can send the first message.</div>';
- box.scrollTop=box.scrollHeight;
- await acSupabase.rpc('astrocare_mark_messages_read',{p_conversation_id:id});
-}
-document.getElementById('startPatientConversation').addEventListener('click',startPatientConversation);
-document.getElementById('patientMessageForm').addEventListener('submit',async e=>{
- e.preventDefault();if(!patientActiveConversation)return;const input=document.getElementById('patientMessageInput'),body=input.value.trim();if(!body)return;
- const btn=document.getElementById('patientSendButton');btn.disabled=true;
- try{const {error}=await acSupabase.from('care_messages').insert({conversation_id:patientActiveConversation.id,sender_id:acSessionUser.id,body});if(error)throw error;input.value='';await loadPatientMessages(patientActiveConversation.id);await loadPatientConversations();}
- catch(err){patientChatStatus('Message not sent: '+err.message,true);}finally{btn.disabled=false;}
-});
-
-// Patient authentication: explicit email/password accounts; no silent anonymous identity creation.
-let patientRegisterMode=false;
-function patientAuthShow(mode='login',message=''){
- patientRegisterMode=mode==='register';
- const gate=document.getElementById('patientAuthGate'),app=document.getElementById('patientApp');
- gate.style.display='grid';app.style.display='none';
- document.getElementById('patientNameField').style.display=patientRegisterMode?'block':'none';
- document.getElementById('patientAuthSubmit').textContent=patientRegisterMode?'Create account':'Sign in';
- document.getElementById('patientAuthToggle').textContent=patientRegisterMode?'I already have an account':'Create account';
- document.getElementById('patientAuthStatus').textContent=message;
-}
-function patientAuthSignedIn(){document.getElementById('patientAuthGate').style.display='none';document.getElementById('patientApp').style.display='grid';}
-document.getElementById('patientAuthToggle').addEventListener('click',()=>patientAuthShow(patientRegisterMode?'login':'register'));
-document.getElementById('patientAuthForm').addEventListener('submit',async e=>{
- e.preventDefault();const status=document.getElementById('patientAuthStatus'),btn=document.getElementById('patientAuthSubmit');
- if(!acSupabase){status.textContent='Supabase is not available. Check your internet connection.';return;}
- const email=document.getElementById('patientAuthEmail').value.trim(),password=document.getElementById('patientAuthPassword').value;btn.disabled=true;status.textContent='Please wait…';
- try{
-  if(patientRegisterMode){
-   const display_name=document.getElementById('patientAuthName').value.trim();
-   const {data,error}=await acSupabase.auth.signUp({email,password,options:{data:{display_name}}});if(error)throw error;
-   if(!data.session){status.textContent='Account created. Check your email to confirm the account, then sign in.';return;}
-   acSessionUser=data.user;patientAuthSignedIn();document.getElementById('platformStatus').innerHTML='<span class="dot"></span> ACCOUNT SIGNED IN';await loadMedicalRecords();recordConnectionStatus('Signed in','green');await initPatientMessaging();
-  }else{
-   const {data,error}=await acSupabase.auth.signInWithPassword({email,password});if(error)throw error;
-   acSessionUser=data.user;patientAuthSignedIn();document.getElementById('platformStatus').innerHTML='<span class="dot"></span> ACCOUNT SIGNED IN';await loadMedicalRecords();recordConnectionStatus('Signed in','green');await initPatientMessaging();
-  }
- }catch(err){status.textContent=err.message||'Authentication failed.';}finally{btn.disabled=false;}
-});
-async function patientSignOut(){if(acSupabase)await acSupabase.auth.signOut();acSessionUser=null;acRecordsReady=false;document.getElementById('platformStatus').innerHTML='<span class="dot"></span> SIGNED OUT';patientAuthShow('login','You have signed out.');}
-// Replace silent session-only startup with the visible patient account gate.
-(async()=>{
- try{
-  if(!window.supabase?.createClient){patientAuthShow('login','Supabase client failed to load. Check your connection and reload.');return;}
-  acSupabase=window.supabase.createClient(AC_SUPABASE_URL,AC_SUPABASE_ANON_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
-  const {data:{session},error}=await acSupabase.auth.getSession();if(error)throw error;
-  if(session?.user){acSessionUser=session.user;patientAuthSignedIn();document.getElementById('platformStatus').innerHTML='<span class="dot"></span> ACCOUNT SIGNED IN';await initialiseMedicalRecords();await initPatientMessaging();}
-  else patientAuthShow('login');
-  acSupabase.auth.onAuthStateChange((event,sess)=>{if(event==='SIGNED_OUT'){acSessionUser=null;patientAuthShow('login','You have signed out.');}});
- }catch(err){patientAuthShow('login','Authentication setup error: '+(err.message||'Unknown error'));}
-})();
-
+document.getElementById('crewModal').addEventListener('click',e=>{if(e.target.id==='crewModal')closeModal('crewModal')});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeModal('crewModal')});
 </script>
 </body>
 </html>
