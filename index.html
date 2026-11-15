@@ -46,7 +46,7 @@ nav{display:grid;gap:5px}
 h1{font-size:27px;margin:7px 0 6px;letter-spacing:-.5px}h2{font-size:17px;margin:0 0 15px}h3{font-size:14px;margin:0 0 9px}
 .sub{color:var(--muted);font-size:13px;line-height:1.6;margin:0}
 .btn{border:1px solid var(--line);background:#202b38;color:var(--text);padding:10px 14px;border-radius:10px;font-size:12px;font-weight:650}
-.btn:hover{border-color:#4b7897;background:#24384a}
+.btn:hover{border-color:#3b617b;background:#223242}
 .btn.primary{background:#087fb5;border-color:#087fb5;color:white}.btn.primary:hover{background:#0796d2}
 .btn.danger{background:#3a2024;border-color:#69343c;color:#ffb7bd}
 .grid{display:grid;gap:16px}.grid.four{grid-template-columns:repeat(4,minmax(0,1fr))}.grid.three{grid-template-columns:repeat(3,minmax(0,1fr))}.grid.two{grid-template-columns:repeat(2,minmax(0,1fr))}
@@ -67,9 +67,9 @@ label{display:block;color:#b8c5d4;font-size:11px;margin:0 0 7px}
 .form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.field{margin-bottom:13px}.field.full{grid-column:1/-1}
 .search{max-width:580px;position:relative}.search input{padding-left:38px}.search:before{content:"⌕";position:absolute;left:13px;top:7px;font-size:22px;color:var(--muted)}
 .notice{padding:13px 15px;border:1px solid #5a4724;background:#2b2417;color:#f5d79c;border-radius:12px;font-size:11px;line-height:1.6}
-.anatomy{display:grid;grid-template-columns:260px 1fr;gap:18px}
-.body-map{min-height:420px;display:grid;place-items:center;background:radial-gradient(ellipse at center,#1d3447 0,#111a25 65%);border:1px solid var(--line);border-radius:15px;padding:18px}
-.figure{width:190px;height:365px;position:relative;display:flex;align-items:center;flex-direction:column}
+.anatomy{display:grid;grid-template-columns:190px minmax(0,1fr);gap:18px}
+.body-map{min-height:320px;display:grid;place-items:center;background:radial-gradient(ellipse at center,#1d3447 0,#111a25 65%);border:1px solid var(--line);border-radius:15px;padding:18px}
+.figure{width:135px;height:265px;transform:scale(.76);transform-origin:center;position:relative;display:flex;align-items:center;flex-direction:column}
 .head{width:54px;height:62px;border:2px solid #76b9d6;border-radius:48% 48% 44% 44%;background:#25445a}
 .neck{width:23px;height:18px;background:#25445a;border-left:2px solid #76b9d6;border-right:2px solid #76b9d6}
 .torso{width:104px;height:137px;background:#25445a;border:2px solid #76b9d6;border-radius:35px 35px 22px 22px;position:relative}
@@ -117,216 +117,24 @@ footer{text-align:center;color:#64748b;font-size:10px;padding:25px}
 .record-auth{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 
 </style>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2">
-// ============================================================
-// ASTROCARE 360 — STEP 3.1: PRIVATE MEDICAL RECORDS
-// Silent anonymous Supabase Auth preserves the no-visible-login
-// experience while enabling auth.uid()-based Row Level Security.
-// ============================================================
-const AC_SUPABASE_URL = 'https://qpmwklyinjlfiubaabse.supabase.co';
-const AC_SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFwbXdrbHlpbmpsZml1YmFhYnNlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTQ2NTc3MjksImV4cCI6MjExMDIzMzcyOX0.H88XAMBPYAOSAYszwEqkiS8SViiDXUt8aegrKySbFaU';
-const AC_STORAGE_BUCKET = 'medical-record-files';
-let acSupabase = null;
-let acSessionUser = null;
-let acRecordsReady = false;
-
-function recordStatus(message, isError=false) {
-  const el = document.getElementById('recordStatus');
-  if (el) { el.textContent = message; el.style.color = isError ? '#ffadb5' : 'var(--muted)'; }
-}
-function recordFormStatus(message, isError=false) {
-  const el = document.getElementById('recordFormStatus');
-  if (el) { el.textContent = message; el.style.color = isError ? '#ffadb5' : '#9ca3af'; }
-}
-function recordConnectionStatus(message, kind='amber') {
-  const el=document.getElementById('recordConnection');
-  if(el){el.className='tag '+kind;el.textContent=message;}
-}
-function getSupabaseError(err) {
-  const msg = err?.message || err?.error_description || 'Unknown connection error';
-  return msg.length > 220 ? msg.slice(0,220)+'…' : msg;
-}
-async function initialiseMedicalRecords() {
-  if (!window.supabase?.createClient) {
-    recordConnectionStatus('Client library unavailable','red');
-    recordStatus('The Supabase client library could not load. Check the internet connection and reload.', true);
-    return;
-  }
-  try {
-    acSupabase = window.supabase.createClient(AC_SUPABASE_URL, AC_SUPABASE_ANON_KEY, {
-      auth: { persistSession:true, autoRefreshToken:true, detectSessionInUrl:true }
-    });
-    let {data:{session},error}=await acSupabase.auth.getSession();
-    if(error) throw error;
-    if(!session?.user) {
-      const result=await acSupabase.auth.signInAnonymously();
-      if(result.error) throw result.error;
-      session=result.data.session;
-    }
-    acSessionUser=session?.user || null;
-    if(!acSessionUser) throw new Error('A private account session was not created.');
-    acRecordsReady=true;
-    recordConnectionStatus('Secure session active','green');
-    recordStatus('Private session ready. Your records are protected by database access policies.');
-    await loadMedicalRecords();
-  } catch(err) {
-    acRecordsReady=false;
-    recordConnectionStatus('Setup required','red');
-    const detail=getSupabaseError(err);
-    recordStatus('Could not start the private records session. In Supabase, enable Authentication → Sign In / Providers → Anonymous Sign-Ins, then reload. Details: '+detail,true);
-    document.getElementById('medicalRecordsList').innerHTML='<div class="empty">Medical records are unavailable until anonymous authentication is enabled and the database policies are configured.</div>';
-  }
-}
-function formatRecordDate(value) {
-  if(!value) return 'Date unavailable';
-  const d=new Date(value);
-  return Number.isNaN(d.getTime()) ? 'Date unavailable' : d.toLocaleString();
-}
-async function loadMedicalRecords() {
-  if(!acSupabase || !acSessionUser) {
-    recordStatus('Waiting for a secure account session…');
-    return;
-  }
-  const list=document.getElementById('medicalRecordsList');
-  list.innerHTML='<div class="empty">Loading your records…</div>';
-  const {data,error}=await acSupabase.from('medical_records')
-    .select('id,patient_id,created_by,record_title,record_content,record_category,is_simulated,created_at,updated_at')
-    .eq('patient_id',acSessionUser.id)
-    .order('created_at',{ascending:false});
-  if(error) {
-    list.innerHTML='<div class="empty">Records could not be loaded.</div>';
-    recordStatus('Database error: '+getSupabaseError(error),true);
-    return;
-  }
-  if(!data?.length) {
-    list.innerHTML='<div class="empty">No records yet. Use the form below to add your first record.</div>';
-    recordStatus('No records found for this account.');
-    return;
-  }
-  list.innerHTML=data.map(r=>`
-    <article class="record-card">
-      <span class="tag blue">${escapeHTML(r.record_category||'Other')}</span>
-      <h3>${escapeHTML(r.record_title)}</h3>
-      <p class="muted small" style="white-space:pre-wrap;line-height:1.6">${escapeHTML((r.record_content||'No details added.').slice(0,850))}${(r.record_content||'').length>850?'…':''}</p>
-      <div class="record-meta"><span class="tag">${r.is_simulated?'Simulated':'User-entered · not clinically verified'}</span><span class="tag">${escapeHTML(formatRecordDate(r.created_at))}</span></div>
-      <div class="record-actions"><button class="btn" type="button" onclick="editMedicalRecord('${r.id}')">Edit</button><button class="btn" type="button" onclick="viewMedicalAttachments('${r.id}')">Attachments</button></div>
-    </article>`).join('');
-  recordStatus(`${data.length} record${data.length===1?'':'s'} loaded for this private account.`);
-}
-async function saveMedicalRecord(event) {
-  event.preventDefault();
-  if(!acSupabase || !acSessionUser) {
-    recordFormStatus('Secure session is not ready. Reload the page after enabling anonymous authentication.',true);
-    return;
-  }
-  const btn=document.getElementById('saveRecordBtn');
-  btn.disabled=true; btn.textContent='Saving…';
-  try {
-    const id=document.getElementById('recordId').value;
-    const payload={
-      patient_id:acSessionUser.id,
-      created_by:acSessionUser.id,
-      record_title:document.getElementById('recordTitle').value.trim(),
-      record_content:document.getElementById('recordContent').value.trim() || null,
-      record_category:document.getElementById('recordCategory').value,
-      is_simulated:false,
-      updated_at:new Date().toISOString()
-    };
-    if(!payload.record_title) throw new Error('Enter a record title.');
-    let saved;
-    if(id) {
-      const result=await acSupabase.from('medical_records').update({
-        record_title:payload.record_title,record_content:payload.record_content,
-        record_category:payload.record_category,updated_at:payload.updated_at
-      }).eq('id',id).eq('patient_id',acSessionUser.id).select('id').single();
-      if(result.error) throw result.error;
-      saved=result.data;
-    } else {
-      const result=await acSupabase.from('medical_records').insert(payload).select('id').single();
-      if(result.error) throw result.error;
-      saved=result.data;
-    }
-    const file=document.getElementById('recordFile').files[0];
-    if(file) await uploadMedicalAttachment(saved.id,file);
-    resetMedicalRecordForm();
-    recordFormStatus('Record saved successfully.');
-    toast('Medical record saved securely.');
-    await loadMedicalRecords();
-  } catch(err) {
-    recordFormStatus('Save failed: '+getSupabaseError(err),true);
-  } finally {
-    btn.disabled=false;btn.textContent='Save record';
-  }
-}
-async function uploadMedicalAttachment(recordId,file) {
-  const allowed=['application/pdf','image/jpeg','image/png'];
-  if(!allowed.includes(file.type)) throw new Error('Attachment must be a PDF, JPG or PNG file.');
-  if(file.size>8*1024*1024) throw new Error('Attachment must be 8 MB or smaller.');
-  const safeName=file.name.replace(/[^a-zA-Z0-9._-]/g,'_').slice(0,120);
-  const path=`${acSessionUser.id}/${recordId}/${Date.now()}_${safeName}`;
-  const up=await acSupabase.storage.from(AC_STORAGE_BUCKET).upload(path,file,{contentType:file.type,upsert:false});
-  if(up.error) throw up.error;
-  const meta=await acSupabase.from('medical_attachments').insert({
-    record_id:recordId,uploaded_by:acSessionUser.id,file_name:file.name,storage_path:path
-  });
-  if(meta.error) {
-    // Remove the uploaded object if its metadata row could not be saved.
-    await acSupabase.storage.from(AC_STORAGE_BUCKET).remove([path]);
-    throw meta.error;
-  }
-}
-function resetMedicalRecordForm() {
-  document.getElementById('medicalRecordForm').reset();
-  document.getElementById('recordId').value='';
-  document.getElementById('recordFormHeading').textContent='Add a medical record';
-  document.getElementById('saveRecordBtn').textContent='Save record';
-}
-async function editMedicalRecord(id) {
-  if(!acSupabase || !acSessionUser) return;
-  const {data,error}=await acSupabase.from('medical_records')
-    .select('id,record_title,record_content,record_category')
-    .eq('id',id).eq('patient_id',acSessionUser.id).single();
-  if(error){toast('Could not open this record: '+getSupabaseError(error));return;}
-  document.getElementById('recordId').value=data.id;
-  document.getElementById('recordTitle').value=data.record_title||'';
-  document.getElementById('recordContent').value=data.record_content||'';
-  document.getElementById('recordCategory').value=data.record_category||'Other';
-  document.getElementById('recordFormHeading').textContent='Edit medical record';
-  document.getElementById('saveRecordBtn').textContent='Update record';
-  document.getElementById('recordFile').value='';
-  document.getElementById('records').scrollIntoView({behavior:'smooth'});
-  recordFormStatus('Editing selected record. Existing attachments are retained.');
-}
-async function viewMedicalAttachments(recordId) {
-  if(!acSupabase || !acSessionUser) return;
-  const {data,error}=await acSupabase.from('medical_attachments')
-    .select('id,file_name,storage_path,created_at')
-    .eq('record_id',recordId).order('created_at',{ascending:false});
-  if(error){toast('Could not load attachments: '+getSupabaseError(error));return;}
-  if(!data?.length){toast('No attachments are linked to this record.');return;}
-  const lines=[];
-  for(const a of data) {
-    const {data:link,error:linkError}=await acSupabase.storage.from(AC_STORAGE_BUCKET).createSignedUrl(a.storage_path,300);
-    if(linkError){lines.push(a.file_name+' — access unavailable');continue;}
-    lines.push(`<a href="${link.signedUrl}" target="_blank" rel="noopener" style="color:var(--blue)">${escapeHTML(a.file_name)}</a>`);
-  }
-  const w=window.open('','_blank');
-  if(w) {
-    w.opener=null;
-    w.document.write('<title>Medical record attachments</title><body style="font:14px Arial;background:#10161e;color:#f3f4f6;padding:24px"><h2>Attachments</h2>'+lines.map(x=>'<p>'+x+'</p>').join('')+'</body>');
-    w.document.close();
-  } else {
-    toast('Allow pop-ups to view attachments.');
-  }
-}
-document.getElementById('medicalRecordForm').addEventListener('submit',saveMedicalRecord);
-initialiseMedicalRecords();
-
-</script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
 
-<div class="app">
+<section id="patientAuthGate" style="min-height:100vh;display:none;place-items:center;padding:22px;background:radial-gradient(circle at 80% 10%,#153448,transparent 34%),var(--bg)">
+ <div class="card" style="width:min(460px,100%);padding:28px">
+  <div class="brand-mark" style="margin-bottom:16px">✦</div><div class="eyebrow">ASTROCARE 360 · PATIENT ACCESS</div><h1 style="margin:8px 0">Sign in to your account</h1>
+  <p class="sub" style="margin-bottom:18px">Use your own account to keep medical records linked to your identity. Do not use a shared or public device for sensitive records.</p>
+  <form id="patientAuthForm"><div class="field"><label for="patientAuthEmail">EMAIL</label><input id="patientAuthEmail" type="email" autocomplete="username" required placeholder="you@example.com"></div>
+  <div class="field"><label for="patientAuthPassword">PASSWORD</label><input id="patientAuthPassword" type="password" autocomplete="current-password" required minlength="8" placeholder="Your password"></div>
+  <div class="field" id="patientNameField" style="display:none"><label for="patientAuthName">DISPLAY NAME</label><input id="patientAuthName" maxlength="80" placeholder="Your name"></div>
+  <button class="btn primary" id="patientAuthSubmit" type="submit">Sign in</button> <button class="btn" type="button" id="patientAuthToggle">Create account</button>
+  <p id="patientAuthStatus" class="small muted" role="status" style="margin-top:13px"></p></form>
+  <p class="muted small" style="margin:16px 0 0">Prototype notice: this is not an emergency service or a clinically validated record system.</p>
+ </div>
+</section>
+
+<div class="app" id="patientApp" style="display:none">
 <aside class="sidebar">
   <div class="brand"><div class="brand-mark">✦</div><div><strong>ASTROCARE 360</strong><small>GLOBAL HEALTH PLATFORM</small></div></div>
   <div>
@@ -353,7 +161,7 @@ initialiseMedicalRecords();
     <button class="nav-btn" data-page="profile"><span>⚙</span>My Profile & Settings</button>
     <div class="profile-mini" id="miniProfile" data-open-profile>
       <div class="avatar" id="miniAvatar">A1</div>
-      <div><strong id="miniName">Demo User One</strong><small>Individual</small></div>
+      <div><strong id="miniName">Your profile</strong><small>Individual</small></div>
       <span style="margin-left:auto;color:#7f91a4">›</span>
     </div>
   </div>
@@ -362,38 +170,34 @@ initialiseMedicalRecords();
 <main class="main">
 <header class="topbar">
   <div class="breadcrumb">ASTROCARE <span style="color:#506174">/</span> <strong id="pageCrumb">Overview</strong></div>
-  <div class="top-actions"><span class="status"><span class="dot"></span> DEMO SYSTEM</span><span class="utc" id="clock">--:--:-- UTC</span></div>
+  <div class="top-actions"><span class="status" id="platformStatus"><span class="dot"></span> CONNECTION STATUS: CHECKING</span><span class="utc" id="clock">--:--:-- UTC</span><button class="btn" type="button" onclick="patientSignOut()">Sign out</button></div>
 </header>
 
 <div class="content">
 <div class="notice" style="margin-bottom:18px;border-color:#24506a;background:#132635;color:#c8eaff"><strong>Earth-first platform:</strong> AstroCare 360 is designed as a health-support concept for people and communities on Earth. Space medicine remains a specialised area of inspiration. This prototype does not diagnose conditions or provide emergency care.</div>
 <section class="page active" id="overview">
-  <div class="page-head"><div><div class="eyebrow">PERSONAL HEALTH / OVERVIEW</div><h1>Your Health Dashboard</h1><p class="sub">A central place to review your health information, track measurements and connect with care professionals.</p></div><span class="tag blue">PROTOTYPE DATA</span></div>
-  <div class="notice">Prototype notice: example readings and activity are simulated. They are not medical measurements, diagnoses or a substitute for professional care.</div>
+  <div class="page-head"><div><div class="eyebrow">PERSONAL HEALTH / OVERVIEW</div><h1>Your Health Dashboard</h1><p class="sub">A central place to review your health information, track measurements and connect with care professionals.</p></div><span class="tag amber">NO VERIFIED READINGS</span></div>
+  <div class="notice">No health readings are available yet. Measurements will appear only after you record them manually or connect a supported device. This platform does not diagnose conditions or replace professional care.</div>
   <div class="grid four" style="margin-top:16px">
-    <div class="card"><div class="metric-top">Heart rate <span class="metric-icon">♡</span></div><div class="metric-value">76 <span style="font-size:13px;color:var(--muted)">BPM</span></div><div class="metric-foot"><span class="tag green">Simulated</span> Example reading</div></div>
-    <div class="card"><div class="metric-top">Oxygen saturation <span class="metric-icon">◉</span></div><div class="metric-value">98<span style="font-size:13px;color:var(--muted)">%</span></div><div class="metric-foot"><span class="tag green">Simulated</span> Example reading</div></div>
-    <div class="card"><div class="metric-top">Body temperature <span class="metric-icon">♨</span></div><div class="metric-value">36.8<span style="font-size:13px;color:var(--muted)">°C</span></div><div class="metric-foot"><span class="tag green">Simulated</span> Example reading</div></div>
-    <div class="card"><div class="metric-top">Open medical requests <span class="metric-icon">✚</span></div><div class="metric-value">02</div><div class="metric-foot">Demo requests awaiting review</div></div>
+    <div class="card"><div class="metric-top">Heart rate <span class="metric-icon">♡</span></div><div class="metric-value">—</div><div class="metric-foot">No readings recorded</div></div>
+    <div class="card"><div class="metric-top">Oxygen saturation <span class="metric-icon">◉</span></div><div class="metric-value">—</div><div class="metric-foot">No readings recorded</div></div>
+    <div class="card"><div class="metric-top">Body temperature <span class="metric-icon">♨</span></div><div class="metric-value">—</div><div class="metric-foot">No readings recorded</div></div>
+    <div class="card"><div class="metric-top">Medical requests <span class="metric-icon">✚</span></div><div class="metric-value">—</div><div class="metric-foot">Request service not connected</div></div>
   </div>
   <div class="grid two" style="margin-top:17px">
     <div class="card"><div class="section-row" style="margin:0 0 10px"><h2>Care overview</h2><span class="tag green">Prototype</span></div><div class="list">
       <div class="list-row"><span class="muted small">Platform focus</span><strong class="small">Everyday health support</strong></div>
-      <div class="list-row"><span class="muted small">Your records</span><strong class="small">Local prototype profile</strong></div>
-      <div class="list-row"><span class="muted small">Care network</span><strong class="small" id="crewCount">3 demo profiles</strong></div>
-      <div class="list-row"><span class="muted small">Care connection</span><span class="tag amber">Not connected</span></div>
+      <div class="list-row"><span class="muted small">Your records</span><strong class="small">Supabase account</strong></div>
+      <div class="list-row"><span class="muted small">Care network</span><strong class="small" id="crewCount">No profiles added</strong></div>
+      <div class="list-row"><span class="muted small">Care connection</span><span class="tag amber">Not configured</span></div>
     </div></div>
-    <div class="card"><div class="section-row" style="margin:0 0 10px"><h2>Recent health activity</h2><span class="tag blue">Demo</span></div><div class="list">
-      <div class="list-row"><div><strong class="small">Daily wellness check-in</strong><div class="muted small">Demo profile 002</div></div><span class="muted small">09:15</span></div>
-      <div class="list-row"><div><strong class="small">Health report updated</strong><div class="muted small">Demo profile 001</div></div><span class="muted small">08:42</span></div>
-      <div class="list-row"><div><strong class="small">Medical library viewed</strong><div class="muted small">Respiratory health</div></div><span class="muted small">Yesterday</span></div>
-    </div></div>
+    <div class="card"><div class="section-row" style="margin:0 0 10px"><h2>Recent health activity</h2><span class="tag amber">Live data only</span></div><div class="empty">No health activity has been recorded in this account yet.</div></div>
   </div>
   <div class="section-row"><h2>Quick access</h2></div>
   <div class="grid three">
     <button class="card" style="text-align:left;color:var(--text)" onclick="showPage('library')"><h3>▤ Medical Library</h3><p class="sub">Search health terms in simple language.</p></button>
-    <button class="card" style="text-align:left;color:var(--text)" onclick="showPage('chat')"><h3>◎ Connect to Care</h3><p class="sub">Open the prototype healthcare communication area.</p></button>
-    <button class="card" style="text-align:left;color:var(--text)" onclick="showPage('crew')"><h3>♙ My Care Network</h3><p class="sub">View and add local demonstration profiles.</p></button>
+    <button class="card" style="text-align:left;color:var(--text)" onclick="showPage('chat')"><h3>◎ Connect to Care</h3><p class="sub">Open secure patient–clinician messaging.</p></button>
+    <button class="card" style="text-align:left;color:var(--text)" onclick="showPage('crew')"><h3>♙ My Care Network</h3><p class="sub">View your locally saved care-network notes.</p></button>
   </div>
 </section>
 
@@ -403,10 +207,10 @@ initialiseMedicalRecords();
     <div><div class="eyebrow">PERSONAL HEALTH / PRIVATE RECORDS</div><h1>Medical Records</h1>
       <p class="sub">Create and organise your health information. Records are private to your signed-in account.</p>
     </div>
-    <span class="tag blue">SUPABASE CONNECTED</span>
+    <span class="tag amber">PRIVATE ACCOUNT REQUIRED</span>
   </div>
   <div class="notice" style="border-color:#24506a;background:#132635;color:#c8eaff">
-    <strong>Privacy notice:</strong> This prototype stores records under a private account identity. It is not a clinical record system and must not be used for emergencies. Anonymous access keeps the dashboard free of a visible login, but records are tied to this browser's anonymous session; clearing browser data may make them inaccessible.
+    <strong>Privacy notice:</strong> This prototype stores records under a private account identity. It is not a clinical record system and must not be used for emergencies. Create a personal email/password account. Supabase keeps an authenticated session on this device; the password itself is not saved in browser storage. Access depends on Supabase authentication and database policies.
   </div>
   <div class="card" style="margin-top:16px">
     <div class="records-toolbar">
@@ -514,7 +318,7 @@ initialiseMedicalRecords();
 </section>
 
 <section class="page" id="library">
-  <div class="page-head"><div><div class="eyebrow">KNOWLEDGE CENTRE</div><h1>Medical Library</h1><p class="sub">Search simple explanations of health terms, body systems and selected space medicine concepts.</p></div><span class="tag green">LOCAL DEMO LIBRARY</span></div>
+  <div class="page-head"><div><div class="eyebrow">KNOWLEDGE CENTRE</div><h1>Medical Library</h1><p class="sub">Search simple explanations of health terms, body systems and selected space medicine concepts.</p></div><span class="tag green">EDUCATIONAL CONTENT</span></div>
   <div class="search"><input id="librarySearch" placeholder="Search a medical term, condition or body system..."></div>
   <div class="section-row"><h2>Browse categories</h2></div>
   <div class="body-buttons" style="margin:0 0 18px"><button class="btn" onclick="filterLibrary('All')">All</button><button class="btn" onclick="filterLibrary('Cardiovascular')">Cardiovascular</button><button class="btn" onclick="filterLibrary('Respiratory')">Respiratory</button><button class="btn" onclick="filterLibrary('Space medicine')">Space medicine</button><button class="btn" onclick="filterLibrary('Neurology')">Neurology</button></div>
@@ -523,16 +327,27 @@ initialiseMedicalRecords();
 </section>
 
 <section class="page" id="chat">
-  <div class="page-head"><div><div class="eyebrow">PATIENT / PROFESSIONAL CONNECTION</div><h1>Connect to a Healthcare Professional</h1><p class="sub">A prototype space for patients and authorised healthcare professionals to exchange health-related messages.</p></div><span class="tag amber">LOCAL DEMO · NOT LIVE</span></div>
-  <div class="notice">Messages in this demonstration stay in this browser session. No healthcare professional receives them yet. The production version will route messages through a secured backend and support delayed delivery when a connection is unavailable.</div>
-  <div class="card chat-layout" style="margin-top:16px">
-    <div class="chat-list"><h3>Conversations</h3><div class="list-row" style="cursor:pointer"><div><strong class="small">Healthcare Team</strong><div class="muted small">Professional care connection</div></div><span class="tag green">Demo</span></div><div class="list-row"><div><strong class="small">Care Professional</strong><div class="muted small">Professional contact</div></div><span class="tag blue">Local</span></div><p class="muted small" style="margin-top:15px">Delivery states planned: queued, sent, delivered, read and failed.</p></div>
-    <div class="chat-window"><div><h3>Healthcare Team</h3><span class="muted small">Secure channel planned · Demo conversation</span></div><div class="messages" id="messages"><div class="message">Hello. This is a sample conversation in the AstroCare 360 prototype.<small>Demo message · 09:10</small></div><div class="message mine">Message received in the local demonstration interface. A live backend connection is not configured yet.<small>Demo reply · 09:12</small></div></div><form class="chat-compose" id="chatForm"><input id="chatInput" placeholder="Write a message..." autocomplete="off"><button class="btn primary">Send</button></form></div>
+  <div class="page-head"><div><div class="eyebrow">PATIENT / PROFESSIONAL CONNECTION</div><h1>Connect to a Healthcare Professional</h1><p class="sub">Secure communication between a signed-in patient and an authorised clinician.</p></div><span class="tag amber" id="chatConnectionTag">Messaging setup required</span></div>
+  <div class="notice">Messages are stored in your AstroCare account and visible only to the patient and assigned healthcare professional permitted by the database policies. This prototype is not an emergency channel; delivery may be delayed by connectivity.</div>
+  <div class="grid two" style="margin-top:16px;align-items:start">
+    <div class="card">
+      <h2>Start a conversation</h2>
+      <p class="sub" style="margin-bottom:12px">Choose an authorised clinician listed by the secure directory.</p>
+      <div class="field"><label for="patientDoctorSelect">HEALTHCARE PROFESSIONAL</label><select id="patientDoctorSelect"><option value="">Loading authorised clinicians…</option></select></div>
+      <button class="btn primary" type="button" id="startPatientConversation">Start conversation</button>
+      <p id="patientChatStatus" class="muted small" role="status" style="margin-top:12px">Checking secure messaging service…</p>
+      <h3 style="margin-top:20px">Your conversations</h3><div id="patientConversationList" class="list"><div class="empty">No conversations loaded.</div></div>
+    </div>
+    <div class="card">
+      <div class="section-row" style="margin-top:0"><h2 id="patientChatTitle">Conversation</h2><span class="tag amber" id="patientChatState">Not selected</span></div>
+      <div id="patientMessages" class="messages" style="min-height:260px;max-height:390px"><div class="empty">Select a conversation to view messages.</div></div>
+      <form id="patientMessageForm" class="chat-compose"><input id="patientMessageInput" maxlength="4000" placeholder="Write a message…" autocomplete="off" disabled><button class="btn primary" id="patientSendButton" disabled>Send</button></form>
+    </div>
   </div>
 </section>
 
 <section class="page" id="family">
-  <div class="page-head"><div><div class="eyebrow">SOCIAL SUPPORT / WELLBEING</div><h1>Family & Trusted Connections</h1><p class="sub">Support social connection through family check-ins, calls and simple activities.</p></div><span class="tag amber">LOCAL DEMO</span></div>
+  <div class="page-head"><div><div class="eyebrow">SOCIAL SUPPORT / WELLBEING</div><h1>Family & Trusted Connections</h1><p class="sub">Support social connection through family check-ins, calls and simple activities.</p></div><span class="tag amber">LOCAL DEVICE STORAGE</span></div>
   <div class="notice">Family contact can support wellbeing, especially during isolation. This prototype can save contact details locally, but voice/video calls and cross-device messages require a secure communications service and an internet connection. Games and check-ins are supportive activities, not mental-health treatment.</div>
   <div class="grid two" style="margin-top:16px">
     <div class="card"><h2>Trusted contacts</h2><form id="familyForm"><div class="field"><label>Contact name</label><input id="familyName" required maxlength="70" placeholder="Family member or trusted person"></div><div class="field"><label>Phone number</label><input id="familyPhone" type="tel" required maxlength="30" placeholder="Include country code"></div><button class="btn primary" type="submit">Add contact</button></form><div id="familyContacts" class="list" style="margin-top:14px"><p class="muted small">No contacts added.</p></div></div>
@@ -542,8 +357,8 @@ initialiseMedicalRecords();
 </section>
 
 <section class="page" id="crew">
-  <div class="page-head"><div><div class="eyebrow">PERSONAL CARE NETWORK</div><h1>My Care Network</h1><p class="sub">View example profiles in this local prototype. This is not a live patient directory.</p></div><button class="btn primary" onclick="openModal('crewModal')">＋ Add profile</button></div>
-  <div class="notice">This prototype stores these example cards only in the current browser session. It does not create patient accounts or share information with a clinic.</div>
+  <div class="page-head"><div><div class="eyebrow">PERSONAL CARE NETWORK</div><h1>My Care Network</h1><p class="sub">Keep contact notes on this device. This is not a verified clinician directory.</p></div><button class="btn primary" onclick="openModal('crewModal')">＋ Add profile</button></div>
+  <div class="notice">These contact notes are stored only in this browser. They do not grant access to patient records or represent verified clinicians.</div>
   <div class="grid three" id="crewGrid" style="margin-top:17px"></div>
 </section>
 
@@ -572,18 +387,18 @@ initialiseMedicalRecords();
 </section>
 
 <section class="page" id="profile">
-  <div class="page-head"><div><div class="eyebrow">ACCOUNT / PERSONAL DETAILS</div><h1>My Health Profile</h1><p class="sub">Update the demonstration profile shown in the sidebar.</p></div></div>
+  <div class="page-head"><div><div class="eyebrow">ACCOUNT / PERSONAL DETAILS</div><h1>My Health Profile</h1><p class="sub">Update the profile shown in the sidebar.</p></div></div>
   <div class="card" style="max-width:850px">
-    <div class="profile-large"><div class="avatar big" id="profileAvatar">AM</div><div><h2 id="profileDisplayName" style="margin:0 0 5px">Demo User One</h2><p class="sub">Individual · Profile ID AC-DEMO-001</p><label class="btn" for="photoInput" style="display:inline-block;margin-top:10px;cursor:pointer">Upload profile photo</label><input type="file" id="photoInput" accept="image/*" hidden></div></div>
+    <div class="profile-large"><div class="avatar big" id="profileAvatar">AM</div><div><h2 id="profileDisplayName" style="margin:0 0 5px">Your profile</h2><p class="sub">Account profile · ID unavailable</p><label class="btn" for="photoInput" style="display:inline-block;margin-top:10px;cursor:pointer">Upload profile photo</label><input type="file" id="photoInput" accept="image/*" hidden></div></div>
     <form id="profileForm"><div class="form-grid">
-      <div class="field"><label>Full name</label><input id="profileName" value="Demo User One" required></div>
-      <div class="field"><label>Individual ID</label><input value="AC-DEMO-001" disabled></div>
+      <div class="field"><label>Full name</label><input id="profileName" value="Your profile" required></div>
+      <div class="field"><label>Individual ID</label><input value="Assigned after account setup" disabled></div>
       <div class="field"><label>Your role (optional)</label><input id="profileRole" value="Individual"></div>
       <div class="field"><label>Community / organisation (optional)</label><input id="profileMission" placeholder="Enter if relevant"></div>
       <div class="field"><label>Nationality</label><input id="profileNationality" placeholder="Enter nationality"></div>
       <div class="field"><label>Contact email</label><input id="profileEmail" type="email" placeholder="name@example.com"></div>
     </div><button class="btn primary" type="submit">Save profile changes</button></form>
-    <p class="muted small" style="margin-top:14px">Privacy note: this demo saves profile details only in this browser on this device. It is not connected to a healthcare provider, clinic or other device.</p>
+    <p class="muted small" style="margin-top:14px">Privacy note: profile details are currently saved on this device only. Cross-device profile synchronisation is not enabled.</p>
   </div>
 </section>
 <footer>ASTROCARE 360 · GLOBAL HEALTH & CARE CONNECTION · PROTOTYPE INTERFACE</footer>
@@ -595,8 +410,8 @@ initialiseMedicalRecords();
 
 <div id="crewModal" style="display:none;position:fixed;inset:0;background:#0009;z-index:30;place-items:center;padding:18px">
   <div class="card" style="width:min(480px,100%);background:#161b22">
-    <div class="page-head" style="margin-bottom:15px"><div><h2>Add profile</h2><p class="sub">Create a local demonstration profile card.</p></div><button class="btn" onclick="closeModal('crewModal')">✕</button></div>
-    <form id="crewForm"><div class="field"><label>Full name</label><input id="crewName" required placeholder="Person name"></div><div class="field"><label>Relationship / Care role</label><input id="crewRole" required placeholder="e.g. Patient, caregiver, clinician"></div><div class="field"><label>Demo profile ID</label><input id="crewId" required placeholder="e.g. AC-004"></div><div class="field"><label>Profile photo (optional)</label><input type="file" id="crewPhoto" accept="image/*"></div><button class="btn primary" type="submit">Add profile</button></form>
+    <div class="page-head" style="margin-bottom:15px"><div><h2>Add profile</h2><p class="sub">Add a contact note saved only in this browser.</p></div><button class="btn" onclick="closeModal('crewModal')">✕</button></div>
+    <form id="crewForm"><div class="field"><label>Full name</label><input id="crewName" required placeholder="Person name"></div><div class="field"><label>Relationship / Care role</label><input id="crewRole" required placeholder="e.g. Patient, caregiver, clinician"></div><div class="field"><label>Local contact reference</label><input id="crewId" required placeholder="e.g. AC-004"></div><div class="field"><label>Profile photo (optional)</label><input type="file" id="crewPhoto" accept="image/*"></div><button class="btn primary" type="submit">Add profile</button></form>
   </div>
 </div>
 
@@ -606,7 +421,7 @@ function showPage(id){
  document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id===id));
  document.querySelectorAll('.nav-btn[data-page]').forEach(b=>b.classList.toggle('active',b.dataset.page===id));
  document.getElementById('pageCrumb').textContent=pageNames[id]||id;
- window.scrollTo({top:0,behavior:'smooth'});
+ window.scrollTo(0,0);
 }
 document.querySelectorAll('.nav-btn[data-page]').forEach(b=>b.addEventListener('click',()=>showPage(b.dataset.page)));
 document.querySelectorAll('[data-open-profile]').forEach(b=>b.addEventListener('click',()=>showPage('profile')));
@@ -643,17 +458,13 @@ function renderLibrary(){
 document.getElementById('librarySearch').addEventListener('input',renderLibrary);
 function filterLibrary(c){currentFilter=c;renderLibrary()}
 renderLibrary();
-let crew=[
- {name:"Demo User One",role:"Individual",id:"AC-DEMO-001",photo:""},
- {name:"Demo User Two",role:"Caregiver",id:"AC-DEMO-002",photo:""},
- {name:"Demo User Three",role:"Healthcare Professional",id:"AC-DEMO-003",photo:""}
-];
+let crew=[];
 function initials(n){return n.split(/\s+/).map(x=>x[0]).join('').slice(0,2).toUpperCase()}
 function avatarMarkup(person,cls="avatar"){return `<div class="${cls}">${person.photo?`<img src="${person.photo}" alt="Profile photo of ${person.name}">`:initials(person.name)}</div>`}
 function renderCrew(){
- document.getElementById('crewGrid').innerHTML=crew.map((p,i)=>`<div class="card"><div class="crew-card">${avatarMarkup(p)}<div class="info"><strong>${escapeHTML(p.name)}</strong><small>${escapeHTML(p.role)} · ${escapeHTML(p.id)}</small></div><span class="tag green">Demo</span></div><div style="display:flex;justify-content:flex-end;margin-top:14px"><button class="btn" onclick="removeCrew(${i})">Remove card</button></div></div>`).join('');
- document.getElementById('crewCount').textContent=crew.length+' registered';
- const select=document.getElementById('triagePerson');select.innerHTML=crew.map(p=>`<option>${escapeHTML(p.name)}</option>`).join('');
+ document.getElementById('crewGrid').innerHTML=crew.length?crew.map((p,i)=>`<div class="card"><div class="crew-card">${avatarMarkup(p)}<div class="info"><strong>${escapeHTML(p.name)}</strong><small>${escapeHTML(p.role)} · ${escapeHTML(p.id)}</small></div></div></div>`).join(''):'<div class="empty">No care-network profiles are connected to this account yet.</div>';
+ document.getElementById('crewCount').textContent=crew.length?crew.length+' connected':'No connected profiles';
+ const select=document.getElementById('triagePerson');if(select)select.innerHTML='<option value="">No connected person</option>';
 }
 function escapeHTML(s){return String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 function removeCrew(i){if(i===0){toast('Your own demo profile cannot be removed here.');return}crew.splice(i,1);renderCrew();toast('Demo crew card removed.')}
@@ -675,8 +486,8 @@ function saveLocalProfile(){
  localStorage.setItem('astrocare_profile',JSON.stringify(profile));
  document.getElementById('profileDisplayName').textContent=name;
  document.getElementById('miniName').textContent=name;
- document.querySelector('#profile .profile-large .sub').textContent=role+' · Profile ID AC-DEMO-001';
- crew[0]={...crew[0],name,role,id:'AC-DEMO-001',photo:profile.photo};
+ document.querySelector('#profile .profile-large .sub').textContent=role+' · Profile ID Not assigned';
+ crew[0]={...crew[0],name,role,id:'Not assigned',photo:profile.photo};
  if(profile.photo){
   document.getElementById('profileAvatar').innerHTML=`<img src="${profile.photo}" alt="Profile photo">`;
   document.getElementById('miniAvatar').innerHTML=`<img src="${profile.photo}" alt="Profile photo">`;
@@ -704,30 +515,26 @@ document.getElementById('photoInput').addEventListener('change',e=>{
 function loadLocalProfile(){
  try{
   const p=JSON.parse(localStorage.getItem('astrocare_profile')||'null');if(!p)return;
-  document.getElementById('profileName').value=p.name||'Demo User One';
+  document.getElementById('profileName').value=p.name||'Your profile';
   document.getElementById('profileRole').value=p.role||'Individual';
   document.getElementById('profileMission').value=p.organisation||p.mission||'';
   document.getElementById('profileNationality').value=p.nationality||'';
   document.getElementById('profileEmail').value=p.email||'';
-  document.getElementById('profileDisplayName').textContent=p.name||'Demo User One';
-  document.getElementById('miniName').textContent=p.name||'Demo User One';
-  document.querySelector('#profile .profile-large .sub').textContent=(p.role||'Individual')+' · Profile ID AC-DEMO-001';
+  document.getElementById('profileDisplayName').textContent=p.name||'Your profile';
+  document.getElementById('miniName').textContent=p.name||'Your profile';
+  document.querySelector('#profile .profile-large .sub').textContent=(p.role||'Individual')+' · Profile ID Not assigned';
   if(p.photo){document.getElementById('profileAvatar').innerHTML=`<img src="${p.photo}" alt="Profile photo">`;document.getElementById('miniAvatar').innerHTML=`<img src="${p.photo}" alt="Profile photo">`;}
-  else{document.getElementById('profileAvatar').textContent=initials(p.name||'Demo User One');document.getElementById('miniAvatar').textContent=initials(p.name||'Demo User One');}
+  else{document.getElementById('profileAvatar').textContent=initials(p.name||'Your profile');document.getElementById('miniAvatar').textContent=initials(p.name||'Your profile');}
   document.querySelector('.profile-mini small').textContent=p.role||'Individual';
-  if(crew[0])crew[0]={...crew[0],name:p.name||'Demo User One',role:p.role||'Individual',photo:p.photo||''};
+  if(crew[0])crew[0]={...crew[0],name:p.name||'Your profile',role:p.role||'Individual',photo:p.photo||''};
   renderCrew();
  }catch(err){console.warn('Could not load local profile:',err)}
 }
 
-document.getElementById('chatForm').addEventListener('submit',e=>{
- e.preventDefault();const input=document.getElementById('chatInput'),value=input.value.trim();if(!value)return;
- const msg=document.createElement('div');msg.className='message mine';msg.textContent=value;const stamp=document.createElement('small');stamp.textContent='Local demo · not transmitted';msg.appendChild(stamp);document.getElementById('messages').appendChild(msg);input.value='';document.getElementById('messages').scrollTop=document.getElementById('messages').scrollHeight;toast('Message added locally. Backend delivery is not connected.');
-});
+
 document.getElementById('triageForm').addEventListener('submit',e=>{
- e.preventDefault();const text=document.getElementById('triageText').value.trim();if(!text){toast('Please describe the concern first.');return}
- document.getElementById('triageResult').textContent='Demo request prepared for '+document.getElementById('triagePerson').value+'. No healthcare professional has received this check-in because the backend is not connected.';
- toast('Demo check-in summary prepared locally.');
+ e.preventDefault();document.getElementById('triageResult').textContent='Online triage submission is not enabled yet. This form does not send information to a clinician. For urgent concerns, contact local emergency services or a qualified healthcare professional.';
+ toast('Triage service is not connected. Nothing was sent.');
 });
 // Local-first lifestyle logs. Records are explicitly source-labelled and are not sent to a clinician.
 const localStore={get(k){try{return JSON.parse(localStorage.getItem(k)||'[]')}catch{return[]}},set(k,v){localStorage.setItem(k,JSON.stringify(v))}};
@@ -760,8 +567,324 @@ startMemoryGame();
 
 renderCrew();
 
-// Public prototype mode: no sign-in or account authentication is required.
+// Profile details remain local until a profile-sync migration is configured.
 loadLocalProfile();
+</script>
+<script>
+
+// ============================================================
+// ASTROCARE 360 — STEP 3.1: PRIVATE MEDICAL RECORDS
+// Silent anonymous Supabase Auth preserves the no-visible-login
+// experience while enabling auth.uid()-based Row Level Security.
+// ============================================================
+const AC_SUPABASE_URL = 'https://qpmwklyinjlfiubaabse.supabase.co';
+const AC_SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFwbXdrbHlpbmpsZml1YmFhYnNlIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTQ2NTc3MjksImV4cCI6MjExMDIzMzcyOX0.H88XAMBPYAOSAYszwEqkiS8SViiDXUt8aegrKySbFaU';
+const AC_STORAGE_BUCKET = 'medical-record-files';
+let acSupabase = null;
+let acSessionUser = null;
+let acRecordsReady = false;
+
+function recordStatus(message, isError=false) {
+  const el = document.getElementById('recordStatus');
+  if (el) { el.textContent = message; el.style.color = isError ? '#ffadb5' : 'var(--muted)'; }
+}
+function recordFormStatus(message, isError=false) {
+  const el = document.getElementById('recordFormStatus');
+  if (el) { el.textContent = message; el.style.color = isError ? '#ffadb5' : '#9ca3af'; }
+}
+function recordConnectionStatus(message, kind='amber') {
+  const el=document.getElementById('recordConnection');
+  if(el){el.className='tag '+kind;el.textContent=message;}
+}
+function getSupabaseError(err) {
+  const msg = err?.message || err?.error_description || 'Unknown connection error';
+  return msg.length > 220 ? msg.slice(0,220)+'…' : msg;
+}
+async function initialiseMedicalRecords() {
+  if (!window.supabase?.createClient) {
+    recordConnectionStatus('Client library unavailable','red');
+    recordStatus('The Supabase client library could not load. Check the internet connection and reload.', true);
+    return;
+  }
+  try {
+    acSupabase = window.supabase.createClient(AC_SUPABASE_URL, AC_SUPABASE_ANON_KEY, {
+      auth: { persistSession:true, autoRefreshToken:true, detectSessionInUrl:true }
+    });
+    let {data:{session},error}=await acSupabase.auth.getSession();
+    if(error) throw error;
+    if(!session?.user) {
+      acRecordsReady=false;
+      recordConnectionStatus('Sign-in required','amber');
+      recordStatus('Sign in to a patient account to access private records.');
+      const list=document.getElementById('medicalRecordsList');
+      if(list) list.innerHTML='<div class="empty">Sign in to load your private medical records.</div>';
+      return;
+    }
+    acSessionUser=session.user;
+    acRecordsReady=true;
+    recordConnectionStatus('Authenticated session','green');
+    recordStatus('Signed-in account session ready.');
+    await loadMedicalRecords();
+  } catch(err) {
+    acRecordsReady=false;
+    recordConnectionStatus('Setup required','red');
+    const detail=getSupabaseError(err);
+    recordStatus('Could not start the private records session. Check Supabase Auth and database policies. Details: '+detail,true);
+    document.getElementById('medicalRecordsList').innerHTML='<div class="empty">Medical records are unavailable until authentication and database policies are configured.</div>';
+  }
+}
+function formatRecordDate(value) {
+  if(!value) return 'Date unavailable';
+  const d=new Date(value);
+  return Number.isNaN(d.getTime()) ? 'Date unavailable' : d.toLocaleString();
+}
+async function loadMedicalRecords() {
+  if(!acSupabase || !acSessionUser) {
+    recordStatus('Waiting for a secure account session…');
+    return;
+  }
+  const list=document.getElementById('medicalRecordsList');
+  list.innerHTML='<div class="empty">Loading your records…</div>';
+  const {data,error}=await acSupabase.from('medical_records')
+    .select('id,patient_id,created_by,record_title,record_content,record_category,is_simulated,created_at,updated_at')
+    .eq('patient_id',acSessionUser.id)
+    .order('created_at',{ascending:false});
+  if(error) {
+    list.innerHTML='<div class="empty">Records could not be loaded.</div>';
+    recordStatus('Database error: '+getSupabaseError(error),true);
+    return;
+  }
+  if(!data?.length) {
+    list.innerHTML='<div class="empty">No records yet. Use the form below to add your first record.</div>';
+    recordStatus('No records found for this account.');
+    return;
+  }
+  list.innerHTML=data.map(r=>`
+    <article class="record-card">
+      <span class="tag blue">${escapeHTML(r.record_category||'Other')}</span>
+      <h3>${escapeHTML(r.record_title)}</h3>
+      <p class="muted small" style="white-space:pre-wrap;line-height:1.6">${escapeHTML((r.record_content||'No details added.').slice(0,850))}${(r.record_content||'').length>850?'…':''}</p>
+      <div class="record-meta"><span class="tag">${r.is_simulated?'Simulated':'User-entered · not clinically verified'}</span><span class="tag">${escapeHTML(formatRecordDate(r.created_at))}</span></div>
+      <div class="record-actions"><button class="btn" type="button" onclick="editMedicalRecord('${r.id}')">Edit</button><button class="btn" type="button" onclick="viewMedicalAttachments('${r.id}')">Attachments</button></div>
+    </article>`).join('');
+  recordStatus(`${data.length} record${data.length===1?'':'s'} loaded for this private account.`);
+}
+async function saveMedicalRecord(event) {
+  event.preventDefault();
+  if(!acSupabase || !acSessionUser) {
+    recordFormStatus('Secure session is not ready. Sign in to your patient account, then try again.',true);
+    return;
+  }
+  const btn=document.getElementById('saveRecordBtn');
+  btn.disabled=true; btn.textContent='Saving…';
+  try {
+    const id=document.getElementById('recordId').value;
+    const payload={
+      patient_id:acSessionUser.id,
+      created_by:acSessionUser.id,
+      record_title:document.getElementById('recordTitle').value.trim(),
+      record_content:document.getElementById('recordContent').value.trim() || null,
+      record_category:document.getElementById('recordCategory').value,
+      is_simulated:false,
+      updated_at:new Date().toISOString()
+    };
+    if(!payload.record_title) throw new Error('Enter a record title.');
+    let saved;
+    if(id) {
+      const result=await acSupabase.from('medical_records').update({
+        record_title:payload.record_title,record_content:payload.record_content,
+        record_category:payload.record_category,updated_at:payload.updated_at
+      }).eq('id',id).eq('patient_id',acSessionUser.id).select('id').single();
+      if(result.error) throw result.error;
+      saved=result.data;
+    } else {
+      const result=await acSupabase.from('medical_records').insert(payload).select('id').single();
+      if(result.error) throw result.error;
+      saved=result.data;
+    }
+    const file=document.getElementById('recordFile').files[0];
+    if(file) await uploadMedicalAttachment(saved.id,file);
+    resetMedicalRecordForm();
+    recordFormStatus('Record saved successfully.');
+    toast('Medical record saved securely.');
+    await loadMedicalRecords();
+  } catch(err) {
+    recordFormStatus('Save failed: '+getSupabaseError(err),true);
+  } finally {
+    btn.disabled=false;btn.textContent='Save record';
+  }
+}
+async function uploadMedicalAttachment(recordId,file) {
+  const allowed=['application/pdf','image/jpeg','image/png'];
+  if(!allowed.includes(file.type)) throw new Error('Attachment must be a PDF, JPG or PNG file.');
+  if(file.size>8*1024*1024) throw new Error('Attachment must be 8 MB or smaller.');
+  const safeName=file.name.replace(/[^a-zA-Z0-9._-]/g,'_').slice(0,120);
+  const path=`${acSessionUser.id}/${recordId}/${Date.now()}_${safeName}`;
+  const up=await acSupabase.storage.from(AC_STORAGE_BUCKET).upload(path,file,{contentType:file.type,upsert:false});
+  if(up.error) throw up.error;
+  const meta=await acSupabase.from('medical_attachments').insert({
+    record_id:recordId,uploaded_by:acSessionUser.id,file_name:file.name,storage_path:path
+  });
+  if(meta.error) {
+    // Remove the uploaded object if its metadata row could not be saved.
+    await acSupabase.storage.from(AC_STORAGE_BUCKET).remove([path]);
+    throw meta.error;
+  }
+}
+function resetMedicalRecordForm() {
+  document.getElementById('medicalRecordForm').reset();
+  document.getElementById('recordId').value='';
+  document.getElementById('recordFormHeading').textContent='Add a medical record';
+  document.getElementById('saveRecordBtn').textContent='Save record';
+}
+async function editMedicalRecord(id) {
+  if(!acSupabase || !acSessionUser) return;
+  const {data,error}=await acSupabase.from('medical_records')
+    .select('id,record_title,record_content,record_category')
+    .eq('id',id).eq('patient_id',acSessionUser.id).single();
+  if(error){toast('Could not open this record: '+getSupabaseError(error));return;}
+  document.getElementById('recordId').value=data.id;
+  document.getElementById('recordTitle').value=data.record_title||'';
+  document.getElementById('recordContent').value=data.record_content||'';
+  document.getElementById('recordCategory').value=data.record_category||'Other';
+  document.getElementById('recordFormHeading').textContent='Edit medical record';
+  document.getElementById('saveRecordBtn').textContent='Update record';
+  document.getElementById('recordFile').value='';
+  document.getElementById('records').scrollIntoView({behavior:'smooth'});
+  recordFormStatus('Editing selected record. Existing attachments are retained.');
+}
+async function viewMedicalAttachments(recordId) {
+  if(!acSupabase || !acSessionUser) return;
+  const {data,error}=await acSupabase.from('medical_attachments')
+    .select('id,file_name,storage_path,created_at')
+    .eq('record_id',recordId).order('created_at',{ascending:false});
+  if(error){toast('Could not load attachments: '+getSupabaseError(error));return;}
+  if(!data?.length){toast('No attachments are linked to this record.');return;}
+  const lines=[];
+  for(const a of data) {
+    const {data:link,error:linkError}=await acSupabase.storage.from(AC_STORAGE_BUCKET).createSignedUrl(a.storage_path,300);
+    if(linkError){lines.push(a.file_name+' — access unavailable');continue;}
+    lines.push(`<a href="${link.signedUrl}" target="_blank" rel="noopener" style="color:var(--blue)">${escapeHTML(a.file_name)}</a>`);
+  }
+  const w=window.open('','_blank');
+  if(w) {
+    w.opener=null;
+    w.document.write('<title>Medical record attachments</title><body style="font:14px Arial;background:#10161e;color:#f3f4f6;padding:24px"><h2>Attachments</h2>'+lines.map(x=>'<p>'+x+'</p>').join('')+'</body>');
+    w.document.close();
+  } else {
+    toast('Allow pop-ups to view attachments.');
+  }
+}
+document.getElementById('medicalRecordForm').addEventListener('submit',saveMedicalRecord);
+// Startup is performed after explicit patient authentication below.
+
+
+
+
+// ---------------- SECURE PATIENT–CLINICIAN MESSAGING ----------------
+let patientActiveConversation=null, patientChatChannel=null;
+function patientChatStatus(message, error=false){const el=document.getElementById('patientChatStatus');if(el){el.textContent=message;el.style.color=error?'#ffadb5':'var(--muted)';}}
+async function initPatientMessaging(){
+ if(!acSupabase||!acSessionUser)return;
+ patientChatStatus('Loading authorised healthcare professionals…');
+ try{
+  const {data:doctors,error}=await acSupabase.rpc('astrocare_list_doctors');
+  if(error)throw error;
+  const select=document.getElementById('patientDoctorSelect');
+  select.innerHTML='<option value="">Choose a healthcare professional</option>';
+  (doctors||[]).forEach(doc=>{const o=document.createElement('option');o.value=doc.doctor_id;o.textContent=doc.display_name||'Healthcare professional';select.appendChild(o)});
+  if(!doctors?.length)patientChatStatus('No authorised healthcare professional accounts are listed yet.');
+  else patientChatStatus('Secure messaging directory loaded.');
+  await loadPatientConversations();
+  if(patientChatChannel)await acSupabase.removeChannel(patientChatChannel);
+  patientChatChannel=acSupabase.channel('patient-care-'+acSessionUser.id)
+   .on('postgres_changes',{event:'*',schema:'public',table:'care_messages'},payload=>{
+     if(patientActiveConversation && payload.new?.conversation_id===patientActiveConversation.id)loadPatientMessages(patientActiveConversation.id);
+     loadPatientConversations();
+   }).subscribe();
+ }catch(err){patientChatStatus('Messaging unavailable: '+(err.message||'Database setup required.'),true);document.getElementById('chatConnectionTag').textContent='Setup required';}
+}
+async function loadPatientConversations(){
+ if(!acSupabase||!acSessionUser)return;
+ const box=document.getElementById('patientConversationList');
+ const {data,error}=await acSupabase.from('care_conversations').select('id,doctor_id,status,updated_at').eq('patient_id',acSessionUser.id).order('updated_at',{ascending:false});
+ if(error){box.innerHTML='<div class="empty">Could not load conversations.</div>';patientChatStatus('Conversation query failed: '+error.message,true);return;}
+ if(!data?.length){box.innerHTML='<div class="empty">No conversations yet.</div>';return;}
+ const {data:doctors}=await acSupabase.rpc('astrocare_list_doctors');const names=new Map((doctors||[]).map(x=>[x.doctor_id,x.display_name||'Healthcare professional']));
+ box.innerHTML=data.map(c=>`<button type="button" class="btn" style="text-align:left;white-space:normal" onclick="openPatientConversation('${c.id}')"><strong>${escapeHTML(names.get(c.doctor_id)||'Healthcare professional')}</strong><br><span class="muted small">${escapeHTML(c.status)} · ${new Date(c.updated_at).toLocaleString()}</span></button>`).join('');
+}
+async function startPatientConversation(){
+ const doctorId=document.getElementById('patientDoctorSelect').value;if(!doctorId){patientChatStatus('Choose an authorised healthcare professional first.',true);return;}
+ try{
+  let {data,error}=await acSupabase.from('care_conversations').select('id,doctor_id,status,updated_at').eq('patient_id',acSessionUser.id).eq('doctor_id',doctorId).eq('status','open').maybeSingle();
+  if(error)throw error;
+  if(!data){const result=await acSupabase.from('care_conversations').insert({patient_id:acSessionUser.id,doctor_id:doctorId}).select('id,doctor_id,status,updated_at').single();if(result.error)throw result.error;data=result.data;}
+  const {data:doctors}=await acSupabase.rpc('astrocare_list_doctors');const doc=(doctors||[]).find(x=>x.doctor_id===doctorId);
+  await openPatientConversation(data.id,doc?.display_name||'Healthcare professional');await loadPatientConversations();
+ }catch(err){patientChatStatus('Could not start conversation: '+err.message,true);}
+}
+async function openPatientConversation(id){
+ patientActiveConversation={id};const {data:conv}=await acSupabase.from('care_conversations').select('doctor_id').eq('id',id).maybeSingle();const {data:docs}=await acSupabase.rpc('astrocare_list_doctors');const doctor=(docs||[]).find(x=>x.doctor_id===conv?.doctor_id);document.getElementById('patientChatTitle').textContent=doctor?.display_name||'Conversation';document.getElementById('patientChatState').textContent='Open';
+ document.getElementById('patientMessageInput').disabled=false;document.getElementById('patientSendButton').disabled=false;
+ await loadPatientMessages(id);
+}
+async function loadPatientMessages(id){
+ const box=document.getElementById('patientMessages');const {data,error}=await acSupabase.from('care_messages').select('id,sender_id,body,created_at,read_at').eq('conversation_id',id).order('created_at',{ascending:true});
+ if(error){box.innerHTML='<div class="empty">Messages could not be loaded.</div>';return;}
+ box.innerHTML=data?.length?data.map(m=>`<div class="message ${m.sender_id===acSessionUser.id?'mine':''}">${escapeHTML(m.body)}<small>${m.sender_id===acSessionUser.id?'You':'Healthcare professional'} · ${new Date(m.created_at).toLocaleString()}</small></div>`).join(''):'<div class="empty">No messages yet. You can send the first message.</div>';
+ box.scrollTop=box.scrollHeight;
+ await acSupabase.rpc('astrocare_mark_messages_read',{p_conversation_id:id});
+}
+document.getElementById('startPatientConversation').addEventListener('click',startPatientConversation);
+document.getElementById('patientMessageForm').addEventListener('submit',async e=>{
+ e.preventDefault();if(!patientActiveConversation)return;const input=document.getElementById('patientMessageInput'),body=input.value.trim();if(!body)return;
+ const btn=document.getElementById('patientSendButton');btn.disabled=true;
+ try{const {error}=await acSupabase.from('care_messages').insert({conversation_id:patientActiveConversation.id,sender_id:acSessionUser.id,body});if(error)throw error;input.value='';await loadPatientMessages(patientActiveConversation.id);await loadPatientConversations();}
+ catch(err){patientChatStatus('Message not sent: '+err.message,true);}finally{btn.disabled=false;}
+});
+
+// Patient authentication: explicit email/password accounts; no silent anonymous identity creation.
+let patientRegisterMode=false;
+function patientAuthShow(mode='login',message=''){
+ patientRegisterMode=mode==='register';
+ const gate=document.getElementById('patientAuthGate'),app=document.getElementById('patientApp');
+ gate.style.display='grid';app.style.display='none';
+ document.getElementById('patientNameField').style.display=patientRegisterMode?'block':'none';
+ document.getElementById('patientAuthSubmit').textContent=patientRegisterMode?'Create account':'Sign in';
+ document.getElementById('patientAuthToggle').textContent=patientRegisterMode?'I already have an account':'Create account';
+ document.getElementById('patientAuthStatus').textContent=message;
+}
+function patientAuthSignedIn(){document.getElementById('patientAuthGate').style.display='none';document.getElementById('patientApp').style.display='grid';}
+document.getElementById('patientAuthToggle').addEventListener('click',()=>patientAuthShow(patientRegisterMode?'login':'register'));
+document.getElementById('patientAuthForm').addEventListener('submit',async e=>{
+ e.preventDefault();const status=document.getElementById('patientAuthStatus'),btn=document.getElementById('patientAuthSubmit');
+ if(!acSupabase){status.textContent='Supabase is not available. Check your internet connection.';return;}
+ const email=document.getElementById('patientAuthEmail').value.trim(),password=document.getElementById('patientAuthPassword').value;btn.disabled=true;status.textContent='Please wait…';
+ try{
+  if(patientRegisterMode){
+   const display_name=document.getElementById('patientAuthName').value.trim();
+   const {data,error}=await acSupabase.auth.signUp({email,password,options:{data:{display_name}}});if(error)throw error;
+   if(!data.session){status.textContent='Account created. Check your email to confirm the account, then sign in.';return;}
+   acSessionUser=data.user;patientAuthSignedIn();document.getElementById('platformStatus').innerHTML='<span class="dot"></span> ACCOUNT SIGNED IN';await loadMedicalRecords();recordConnectionStatus('Signed in','green');await initPatientMessaging();
+  }else{
+   const {data,error}=await acSupabase.auth.signInWithPassword({email,password});if(error)throw error;
+   acSessionUser=data.user;patientAuthSignedIn();document.getElementById('platformStatus').innerHTML='<span class="dot"></span> ACCOUNT SIGNED IN';await loadMedicalRecords();recordConnectionStatus('Signed in','green');await initPatientMessaging();
+  }
+ }catch(err){status.textContent=err.message||'Authentication failed.';}finally{btn.disabled=false;}
+});
+async function patientSignOut(){if(acSupabase)await acSupabase.auth.signOut();acSessionUser=null;acRecordsReady=false;document.getElementById('platformStatus').innerHTML='<span class="dot"></span> SIGNED OUT';patientAuthShow('login','You have signed out.');}
+// Replace silent session-only startup with the visible patient account gate.
+(async()=>{
+ try{
+  if(!window.supabase?.createClient){patientAuthShow('login','Supabase client failed to load. Check your connection and reload.');return;}
+  acSupabase=window.supabase.createClient(AC_SUPABASE_URL,AC_SUPABASE_ANON_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}});
+  const {data:{session},error}=await acSupabase.auth.getSession();if(error)throw error;
+  if(session?.user){acSessionUser=session.user;patientAuthSignedIn();document.getElementById('platformStatus').innerHTML='<span class="dot"></span> ACCOUNT SIGNED IN';await initialiseMedicalRecords();await initPatientMessaging();}
+  else patientAuthShow('login');
+  acSupabase.auth.onAuthStateChange((event,sess)=>{if(event==='SIGNED_OUT'){acSessionUser=null;patientAuthShow('login','You have signed out.');}});
+ }catch(err){patientAuthShow('login','Authentication setup error: '+(err.message||'Unknown error'));}
+})();
+
 </script>
 </body>
 </html>
