@@ -90,6 +90,12 @@ label{display:block;color:#b8c5d4;font-size:11px;margin:0 0 7px}
 .fa-card h3{font-size:15px}.fa-card ol,.fa-card ul{margin:6px 0 10px;padding-left:18px;font-size:12px;line-height:1.7;color:#c4cfdb}
 .fa-label{font-size:10px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;margin:12px 0 2px}.fa-label.do{color:#8be0bd}.fa-label.dont{color:#ffadb5}
 .fa-warn{border-left:3px solid var(--amber);background:#2b2417;color:#f5d79c;border-radius:8px;padding:10px 12px;font-size:12px;line-height:1.6;margin-top:6px}.fa-warn b{display:block;margin-bottom:3px}
+/* NASA Human Health & Performance embedded resource */
+.nasa-frame-wrap{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:#fff;min-width:0}
+.nasa-frame{display:block;width:100%;height:760px;border:0;background:#fff}
+.nasa-frame-tools{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;margin-top:14px}
+.nasa-frame-note{font-size:11px;line-height:1.6;color:var(--muted);max-width:720px}
+@media(max-width:600px){.nasa-frame{height:680px}}
 .fa-card summary{cursor:pointer;color:var(--blue);font-size:12px;margin-top:8px}
 @media(max-width:900px){.fa-steps{grid-template-columns:1fr 1fr}}@media(max-width:480px){.fa-steps{grid-template-columns:1fr}}
 .chat-layout{display:grid;grid-template-columns:270px 1fr;min-height:490px;overflow:hidden}
@@ -127,6 +133,7 @@ footer{text-align:center;color:#64748b;font-size:10px;padding:25px}
       <button class="nav-btn" data-page="vitals"><span>⌁</span>Vital Signs</button>
       <button class="nav-btn" data-page="hazards"><span>◈</span>Space Health Risks</button>
       <button class="nav-btn" data-page="library"><span>▤</span>Medical Library</button>
+      <button class="nav-btn" data-page="nasa"><span>🚀</span>NASA Health & Performance</button>
       <button class="nav-btn" data-page="firstaid"><span>✚</span>First Aid Guide</button>
       <button class="nav-btn" data-page="chat"><span>◎</span>Earth Connection<span class="tag red" id="chatBadge" style="margin-left:auto;display:none">0</span></button>
       <button class="nav-btn" data-page="crew"><span>♙</span>Crew Management</button>
@@ -250,6 +257,35 @@ footer{text-align:center;color:#64748b;font-size:10px;padding:25px}
   <p class="muted small" style="margin-top:15px">Educational content only. Before operational use, medical entries must be reviewed, referenced, versioned and approved by qualified professionals.</p>
 </section>
 
+<section class="page" id="nasa">
+  <div class="page-head">
+    <div>
+      <div class="eyebrow">NASA RESEARCH / EXTERNAL RESOURCE</div>
+      <h1>NASA Human Health & Performance</h1>
+      <p class="sub">Explore NASA's Human Health and Performance Directorate, including its work on astronaut health, spaceflight risks, research capabilities and human performance.</p>
+    </div>
+    <span class="tag blue">NASA RESOURCE</span>
+  </div>
+  <div class="notice" style="margin-bottom:15px">
+    This section displays NASA's official website inside AstroCare 360 where embedding is permitted. NASA controls whether its pages can be displayed inside another website.
+  </div>
+  <div class="nasa-frame-wrap">
+    <iframe
+      class="nasa-frame"
+      id="nasaHhpFrame"
+      src="https://www.nasa.gov/hhp/"
+      title="NASA Human Health and Performance Directorate"
+      loading="lazy"
+      referrerpolicy="strict-origin-when-cross-origin"
+      allow="fullscreen">
+    </iframe>
+  </div>
+  <div class="nasa-frame-tools">
+    <p class="nasa-frame-note">If the panel is blank or displays a refusal message, NASA may be preventing its site from being embedded. Use the button to navigate to the official NASA page in this same browser tab.</p>
+    <a class="btn primary" href="https://www.nasa.gov/hhp/" target="_self" rel="noopener">Open NASA page in this tab ↗</a>
+  </div>
+</section>
+
 <section class="page" id="firstaid">
   <div class="page-head"><div><div class="eyebrow">SELF-CARE / FIRST AID</div><h1>First Aid Guide</h1><p class="sub">Simple steps for minor health problems, and the signs that mean you should get medical help.</p></div><span class="tag green">MINOR CONDITIONS</span></div>
   <div class="notice" style="background:#3b2024;border-color:#69343c;color:#ffc9ce"><strong>Emergency?</strong> Follow the mission emergency procedure and contact the medical team straight away for: loss of consciousness, severe bleeding, chest pain, difficulty breathing, severe allergic reaction, seizure, signs of stroke, or a head injury with confusion. Do not search this guide first.</div>
@@ -322,7 +358,7 @@ footer{text-align:center;color:#64748b;font-size:10px;padding:25px}
 
 <script>
 let currentPage='overview';
-const pageNames={overview:"Overview",body:"Body Monitoring",triage:"Medical Triage",vitals:"Vital Signs",hazards:"Space Health Risks",library:"Medical Library",firstaid:"First Aid Guide",chat:"Earth Connection",crew:"Crew Management",wellness:"Crew Wellness",inventory:"Medical Inventory",reports:"Mission Reports",profile:"My Profile"};
+const pageNames={overview:"Overview",body:"Body Monitoring",triage:"Medical Triage",vitals:"Vital Signs",hazards:"Space Health Risks",library:"Medical Library",nasa:"NASA Health & Performance",firstaid:"First Aid Guide",chat:"Earth Connection",crew:"Crew Management",wellness:"Crew Wellness",inventory:"Medical Inventory",reports:"Mission Reports",profile:"My Profile"};
 function showPage(id){
  document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id===id));
  document.querySelectorAll('.nav-btn[data-page]').forEach(b=>b.classList.toggle('active',b.dataset.page===id));
