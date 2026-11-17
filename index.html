@@ -90,12 +90,6 @@ label{display:block;color:#b8c5d4;font-size:11px;margin:0 0 7px}
 .fa-card h3{font-size:15px}.fa-card ol,.fa-card ul{margin:6px 0 10px;padding-left:18px;font-size:12px;line-height:1.7;color:#c4cfdb}
 .fa-label{font-size:10px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;margin:12px 0 2px}.fa-label.do{color:#8be0bd}.fa-label.dont{color:#ffadb5}
 .fa-warn{border-left:3px solid var(--amber);background:#2b2417;color:#f5d79c;border-radius:8px;padding:10px 12px;font-size:12px;line-height:1.6;margin-top:6px}.fa-warn b{display:block;margin-bottom:3px}
-/* NASA Human Health & Performance embedded resource */
-.nasa-frame-wrap{border:1px solid var(--line);border-radius:14px;overflow:hidden;background:#fff;min-width:0}
-.nasa-frame{display:block;width:100%;height:760px;border:0;background:#fff}
-.nasa-frame-tools{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;margin-top:14px}
-.nasa-frame-note{font-size:11px;line-height:1.6;color:var(--muted);max-width:720px}
-@media(max-width:600px){.nasa-frame{height:680px}}
 .fa-card summary{cursor:pointer;color:var(--blue);font-size:12px;margin-top:8px}
 @media(max-width:900px){.fa-steps{grid-template-columns:1fr 1fr}}@media(max-width:480px){.fa-steps{grid-template-columns:1fr}}
 .chat-layout{display:grid;grid-template-columns:270px 1fr;min-height:490px;overflow:hidden}
@@ -118,23 +112,6 @@ footer{text-align:center;color:#64748b;font-size:10px;padding:25px}
  .chat-layout{grid-template-columns:1fr}.chat-list{border-right:0;border-bottom:1px solid var(--line);padding:0 0 12px}.chat-window{padding:12px 0 0}
 }
 @media(max-width:480px){.grid.four,.grid.three,.grid.two,.form-grid{grid-template-columns:1fr}.page-head{flex-direction:column}.top-actions .utc{display:none}.metric-value{font-size:23px}}
-
-/* Family connection prototype */
-.family-layout{display:grid;grid-template-columns:230px minmax(0,1fr);min-height:510px;overflow:hidden;padding:0}
-.family-contacts{padding:17px;border-right:1px solid var(--line);background:#121a24}
-.family-contact{display:flex;align-items:center;gap:10px;width:100%;padding:11px;border:1px solid transparent;border-radius:11px;background:transparent;color:var(--text);text-align:left;margin-top:7px}
-.family-contact.active,.family-contact:hover{background:#1d3040;border-color:#31516a}
-.family-avatar{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;background:#24445a;color:#bceaff;font-weight:750;flex:none}
-.family-chat{display:flex;flex-direction:column;min-width:0;min-height:510px}
-.family-chat-head{display:flex;align-items:center;gap:11px;padding:15px 18px;border-bottom:1px solid var(--line)}
-.family-messages{padding:18px;display:flex;flex-direction:column;gap:11px;overflow-y:auto;flex:1;min-height:300px;max-height:440px;background:radial-gradient(ellipse at top,#172636 0,#111821 70%)}
-.family-bubble{max-width:min(78%,480px);padding:10px 13px;border-radius:14px;background:#263444;border:1px solid #35475a;align-self:flex-start;font-size:12px;line-height:1.55;overflow-wrap:anywhere}
-.family-bubble.mine{align-self:flex-end;background:#075985;border-color:#0e7490}
-.family-bubble small{display:block;margin-top:5px;color:#b6c7d8;font-size:9px;text-align:right}
-.family-compose{display:flex;gap:9px;padding:13px;border-top:1px solid var(--line)}.family-compose input{flex:1;min-width:0}
-.family-quick{display:flex;flex-wrap:wrap;gap:7px;padding:0 13px 13px}.family-quick .btn{font-size:10px;padding:7px 9px}
-@media(max-width:760px){.family-layout{grid-template-columns:1fr}.family-contacts{border-right:0;border-bottom:1px solid var(--line)}.family-contacts-list{display:flex;gap:5px;overflow-x:auto}.family-contact{min-width:130px;margin-top:4px}.family-messages{max-height:380px}}
-
 </style>
 </head>
 <body>
@@ -150,9 +127,8 @@ footer{text-align:center;color:#64748b;font-size:10px;padding:25px}
       <button class="nav-btn" data-page="vitals"><span>⌁</span>Vital Signs</button>
       <button class="nav-btn" data-page="hazards"><span>◈</span>Space Health Risks</button>
       <button class="nav-btn" data-page="library"><span>▤</span>Medical Library</button>
-      <button class="nav-btn" data-page="nasa"><span>🚀</span>NASA Health & Performance</button>
       <button class="nav-btn" data-page="firstaid"><span>✚</span>First Aid Guide</button>
-      <button class="nav-btn" data-page="family"><span>♡</span>Family Connection</button>
+      <button class="nav-btn" data-page="nasa"><span>✦</span>NASA Research Data</button>
       <button class="nav-btn" data-page="chat"><span>◎</span>Earth Connection<span class="tag red" id="chatBadge" style="margin-left:auto;display:none">0</span></button>
       <button class="nav-btn" data-page="crew"><span>♙</span>Crew Management</button>
       <button class="nav-btn" data-page="wellness"><span>♡</span>Crew Wellness</button>
@@ -215,6 +191,7 @@ footer{text-align:center;color:#64748b;font-size:10px;padding:25px}
     <div class="body-map"><div><div class="figure"><div class="head"><button class="organ brain" title="Nervous system" onclick="selectBody('Nervous system')"></button></div><div class="neck"></div><div class="torso"><button class="organ lungs" title="Respiratory system" onclick="selectBody('Respiratory system')"></button><button class="organ heart" title="Cardiovascular system" onclick="selectBody('Cardiovascular system')"></button><button class="organ stomach" title="Digestive system" onclick="selectBody('Digestive system')"></button><div class="arm left"></div><div class="arm right"></div><div class="leg left"></div><div class="leg right"></div></div></div><div class="organ-label">SELECT A BODY SYSTEM</div></div></div>
     <div class="card"><div class="eyebrow">SELECTED SYSTEM</div><h2 id="bodyTitle" style="margin-top:8px">Cardiovascular system</h2><p class="sub" id="bodyDesc">The heart and blood vessels move blood around the body, delivering oxygen and nutrients to tissues.</p>
       <div class="section-row"><h3>Relevant assessments</h3></div><div class="list" id="bodyDetails"></div>
+      <div id="bodyNasa" style="margin:6px 0 4px"></div>
       <div class="body-buttons">
         <button class="btn" onclick="selectBody('Cardiovascular system')">Heart</button><button class="btn" onclick="selectBody('Respiratory system')">Lungs</button><button class="btn" onclick="selectBody('Nervous system')">Brain & nerves</button><button class="btn" onclick="selectBody('Musculoskeletal system')">Bones & muscles</button><button class="btn" onclick="selectBody('Digestive system')">Digestive</button><button class="btn" onclick="selectBody('Urinary system')">Urinary</button><button class="btn" onclick="selectBody('Skin and temperature')">Skin</button>
       </div>
@@ -275,35 +252,6 @@ footer{text-align:center;color:#64748b;font-size:10px;padding:25px}
   <p class="muted small" style="margin-top:15px">Educational content only. Before operational use, medical entries must be reviewed, referenced, versioned and approved by qualified professionals.</p>
 </section>
 
-<section class="page" id="nasa">
-  <div class="page-head">
-    <div>
-      <div class="eyebrow">NASA RESEARCH / EXTERNAL RESOURCE</div>
-      <h1>NASA Human Health & Performance</h1>
-      <p class="sub">Explore NASA's Human Health and Performance Directorate, including its work on astronaut health, spaceflight risks, research capabilities and human performance.</p>
-    </div>
-    <span class="tag blue">NASA RESOURCE</span>
-  </div>
-  <div class="notice" style="margin-bottom:15px">
-    This section displays NASA's official website inside AstroCare 360 where embedding is permitted. NASA controls whether its pages can be displayed inside another website.
-  </div>
-  <div class="nasa-frame-wrap">
-    <iframe
-      class="nasa-frame"
-      id="nasaHhpFrame"
-      src="https://www.nasa.gov/hhp/"
-      title="NASA Human Health and Performance Directorate"
-      loading="lazy"
-      referrerpolicy="strict-origin-when-cross-origin"
-      allow="fullscreen">
-    </iframe>
-  </div>
-  <div class="nasa-frame-tools">
-    <p class="nasa-frame-note">If the panel is blank or displays a refusal message, NASA may be preventing its site from being embedded. Use the button to navigate to the official NASA page in this same browser tab.</p>
-    <a class="btn primary" href="https://www.nasa.gov/hhp/" target="_self" rel="noopener">Open NASA page in this tab ↗</a>
-  </div>
-</section>
-
 <section class="page" id="firstaid">
   <div class="page-head"><div><div class="eyebrow">SELF-CARE / FIRST AID</div><h1>First Aid Guide</h1><p class="sub">Simple steps for minor health problems, and the signs that mean you should get medical help.</p></div><span class="tag green">MINOR CONDITIONS</span></div>
   <div class="notice" style="background:#3b2024;border-color:#69343c;color:#ffc9ce"><strong>Emergency?</strong> Follow the mission emergency procedure and contact the medical team straight away for: loss of consciousness, severe bleeding, chest pain, difficulty breathing, severe allergic reaction, seizure, signs of stroke, or a head injury with confusion. Do not search this guide first.</div>
@@ -315,6 +263,17 @@ footer{text-align:center;color:#64748b;font-size:10px;padding:25px}
   <p class="muted small" style="margin-top:15px">This guide gives general first aid for minor problems. It does not diagnose illness or replace advice from the medical team. If symptoms get worse or you are worried, ask for medical help.</p>
 </section>
 
+<section class="page" id="nasa">
+  <div class="page-head"><div><div class="eyebrow">NASA OPEN DATA</div><h1>NASA Research Data</h1><p class="sub">Search real NASA space-health research from the NASA Open Science Data Repository (OSDR) to learn how spaceflight affects the body.</p></div><span class="tag blue">NASA OSDR</span></div>
+  <form id="nasaForm" class="search" style="display:flex;gap:8px;max-width:640px"><input id="nasaSearch" placeholder="Search NASA studies, e.g. bone, radiation, immune..." style="flex:1"><button class="btn primary" type="submit">Search</button></form>
+  <div class="section-row"><h2>Browse by topic</h2></div>
+  <div class="body-buttons" id="nasaTopics" style="margin:0 0 14px"></div>
+  <p class="small muted" id="nasaStatus" style="margin:0 0 14px">Loading…</p>
+  <div class="grid two" id="nasaResults"></div>
+  <div class="notice" style="margin-top:18px">Most NASA space-biology studies use animals such as mice, so results show how spaceflight affects living bodies in general. Human data is limited. This is research information, not medical advice. Ask the medical team how it applies to you.</div>
+  <p class="muted small" style="margin-top:12px">Source: <a href="https://osdr.nasa.gov/bio/repo/" target="_blank" rel="noopener noreferrer" style="color:#8bdcff">NASA Open Science Data Repository</a> · <a href="https://data.nasa.gov/dataset/?q=Health+" target="_blank" rel="noopener noreferrer" style="color:#8bdcff">NASA Open Data Portal: Health datasets</a></p>
+</section>
+
 <section class="page" id="chat">
   <div class="page-head"><div><div class="eyebrow">EARTH MEDICAL CONNECTION</div><h1>Medical Communication</h1><p class="sub">Messaging between the astronaut portal and a future doctor portal.</p></div><span class="tag amber" id="chatConn">Connecting…</span></div>
   <div class="notice">Messages go to the medical team's clinic portal and appear there live. If a message cannot be sent, your text stays in the box so you can try again.</div>
@@ -322,26 +281,6 @@ footer{text-align:center;color:#64748b;font-size:10px;padding:25px}
     <div class="chat-list"><h3>Conversations</h3><div class="list-row" style="cursor:pointer"><div><strong class="small">Earth Medical Team</strong><div class="muted small" id="chatPreview">Mission medical support</div></div><span class="tag green">Live</span></div><p class="muted small" style="margin-top:15px" id="chatMe"></p></div>
     <div class="chat-window"><div><h3>Earth Medical Team</h3><span class="muted small" id="chatStatus">Connecting…</span></div><div class="messages" id="messages"><div class="empty">Loading messages…</div></div><form class="chat-compose" id="chatForm"><input id="chatInput" placeholder="Write a message..." autocomplete="off" maxlength="4000"><button class="btn primary" id="chatSend">Send</button></form></div>
   </div>
-</section>
-
-
-<section class="page" id="family">
-  <div class="page-head"><div><div class="eyebrow">PERSONAL WELLBEING / EARTH CONNECTION</div><h1>Family Connection</h1><p class="sub">A familiar space for astronauts to share greetings, encouragement and everyday moments with the people they care about.</p></div><span class="tag blue">LOCAL DEMO</span></div>
-  <div class="notice" style="margin-bottom:15px"><strong>Prototype limitation:</strong> This chat is built into this HTML file and works only in this browser on this device. Messages are saved locally for demonstration; they are <strong>not delivered to real family members</strong> and are not visible to another person or device. A secure backend and verified family accounts will be needed for real communication.</div>
-  <div class="card family-layout">
-    <aside class="family-contacts"><h3>My family</h3><p class="muted small">Demo conversations</p><div class="family-contacts-list">
-      <button class="family-contact active" data-family-contact="mom"><span class="family-avatar">M</span><span><strong class="small">Mum</strong><small class="muted" style="display:block">Family</small></span></button>
-      <button class="family-contact" data-family-contact="dad"><span class="family-avatar">D</span><span><strong class="small">Dad</strong><small class="muted" style="display:block">Family</small></span></button>
-      <button class="family-contact" data-family-contact="group"><span class="family-avatar">♡</span><span><strong class="small">Family Group</strong><small class="muted" style="display:block">Everyone</small></span></button>
-    </div><p class="muted small" style="margin-top:18px">Demo contacts are fictional placeholders. Real contacts must be added through a secure, consent-based system.</p></aside>
-    <div class="family-chat">
-      <div class="family-chat-head"><span class="family-avatar" id="familyAvatar">M</span><div><h3 id="familyChatTitle" style="margin:0 0 3px">Mum</h3><span class="muted small">Personal conversation · Demo mode</span></div><span class="tag amber" style="margin-left:auto">Not live</span></div>
-      <div class="family-messages" id="familyMessages" aria-live="polite"></div>
-      <div class="family-quick"><button class="btn" type="button" data-family-quick="Hello! Just checking in. How is everyone doing back home?">👋 Send a greeting</button><button class="btn" type="button" data-family-quick="I miss you all. Sending love from up here. ❤️">❤️ Send some love</button><button class="btn" type="button" data-family-quick="I had a busy day, but I am doing okay. Tell me what is new at home!">🌍 Share an update</button></div>
-      <form class="family-compose" id="familyForm"><input id="familyInput" maxlength="1000" autocomplete="off" placeholder="Write a message to your family…" aria-label="Write a family message"><button class="btn primary" type="submit">Send</button></form>
-    </div>
-  </div>
-  <p class="muted small" style="margin-top:13px">Mental wellbeing note: staying connected can help astronauts feel supported, but this demo is not a counselling or emergency service. If someone is distressed or needs urgent support, use the mission's established psychological-support and emergency procedures.</p>
 </section>
 
 <section class="page" id="crew">
@@ -396,7 +335,7 @@ footer{text-align:center;color:#64748b;font-size:10px;padding:25px}
 
 <script>
 let currentPage='overview';
-const pageNames={overview:"Overview",body:"Body Monitoring",triage:"Medical Triage",vitals:"Vital Signs",hazards:"Space Health Risks",library:"Medical Library",nasa:"NASA Health & Performance",firstaid:"First Aid Guide",chat:"Earth Connection",family:"Family Connection",crew:"Crew Management",wellness:"Crew Wellness",inventory:"Medical Inventory",reports:"Mission Reports",profile:"My Profile"};
+const pageNames={overview:"Overview",body:"Body Monitoring",triage:"Medical Triage",vitals:"Vital Signs",hazards:"Space Health Risks",library:"Medical Library",firstaid:"First Aid Guide",nasa:"NASA Research Data",chat:"Earth Connection",crew:"Crew Management",wellness:"Crew Wellness",inventory:"Medical Inventory",reports:"Mission Reports",profile:"My Profile"};
 function showPage(id){
  document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id===id));
  document.querySelectorAll('.nav-btn[data-page]').forEach(b=>b.classList.toggle('active',b.dataset.page===id));
@@ -417,7 +356,7 @@ const bodyInfo={
  "Urinary system":["The kidneys filter blood and help regulate water, salts and waste removal.",["Hydration — intake and fluid-balance records.","Urinary symptoms — self-reported information.","Kidney function — appropriate laboratory tests and clinical assessment."]],
  "Skin and temperature":["The skin protects the body and helps regulate temperature.",["Temperature — suitable, validated thermometer.","Skin concerns — visual report and clinical assessment.","Cabin temperature — separate environmental sensor."]]
 };
-function selectBody(name){const d=bodyInfo[name];document.getElementById('bodyTitle').textContent=name;document.getElementById('bodyDesc').textContent=d[0];document.getElementById('bodyDetails').innerHTML=d[1].map(x=>`<div class="list-row"><span class="small">${x}</span></div>`).join('')}
+function selectBody(name){const d=bodyInfo[name];document.getElementById('bodyTitle').textContent=name;document.getElementById('bodyDesc').textContent=d[0];document.getElementById('bodyDetails').innerHTML=d[1].map(x=>`<div class="list-row"><span class="small">${x}</span></div>`).join('');const nt={'Cardiovascular system':'cardiovascular','Respiratory system':'lung','Nervous system':'brain','Musculoskeletal system':'bone','Digestive system':'microbiome','Urinary system':'kidney','Skin and temperature':'skin'}[name];document.getElementById('bodyNasa').innerHTML=nt?`<button class="btn" onclick="openNasa('${nt}')">✦ See NASA research on this system</button>`:''}
 selectBody('Cardiovascular system');
 const terms=[
  {term:"Hypoxia",cat:"Respiratory",simple:"A condition in which body tissues do not receive enough oxygen to work properly.",detail:"Hypoxia can have different causes and can be serious. A pulse oximeter reading is only one piece of information; symptoms and clinical assessment matter too.",related:"Oxygen saturation · Respiratory system · Hypoxemia"},
@@ -466,6 +405,91 @@ function renderFirstAid(){
 document.getElementById('faSearch').addEventListener('input',renderFirstAid);
 document.getElementById('faFilters').addEventListener('click',e=>{const b=e.target.closest('[data-fa]');if(b){faFilter=b.dataset.fa;renderFirstAid()}});
 renderFirstAid();
+
+/* ================= NASA OPEN SCIENCE DATA (OSDR) ================= */
+const NASA={
+ api:'https://osdr.nasa.gov/osdr/data/search',
+ repo:'https://osdr.nasa.gov/bio/repo/search',
+ portal:'https://data.nasa.gov/dataset/?q=Health+',
+ topics:[['Bone loss','bone'],['Muscle','muscle'],['Radiation','radiation'],['Immune system','immune'],['Heart & vessels','cardiovascular'],['Eyes & vision','retina'],['Kidney','kidney'],['Skin','skin'],['Gut microbiome','microbiome'],['Human astronauts','astronaut']],
+ curated:[
+  {acc:'',title:'Inspiration4 crew health data',summary:'The first open-access human biological dataset from a commercial spaceflight. Four civilian astronauts flew for three days, giving blood, skin biopsies, swabs and more. The data is split across 10 studies in OSDR.',tags:['Human','Spaceflight'],kw:'astronaut human blood skin immune inspiration4 crew cardiovascular',url:'https://osdr.nasa.gov/bio/repo/search?q=Inspiration4&data_source=cgene'},
+  {acc:'OSD-137',title:'Rodent Research-3: mouse liver on the ISS',summary:'Mice lived on the International Space Station for 39 to 42 days. The mission tested a possible countermeasure for the muscle and bone loss that happens in spaceflight.',tags:['Mouse','ISS'],kw:'bone muscle liver mouse countermeasure loss skeletal'},
+  {acc:'OSD-232',title:'Cartilage from space-flown mice',summary:'Studies articular and sternal cartilage from mice that experienced spaceflight conditions. Useful for joint and skeletal health.',tags:['Mouse','Spaceflight'],kw:'bone cartilage joint skeletal muscle'},
+  {acc:'OSD-4',title:'Space-flown murine thymus tissue',summary:'Thymus tissue from mice, studied for how spaceflight affects the organ that helps train immune cells.',tags:['Mouse','Spaceflight'],kw:'immune thymus'},
+  {acc:'',title:'NASA Twins Study',summary:'One astronaut was monitored for 340 days on the ISS, a rare long-duration, single-person study of how a year in space changes the body.',tags:['Human','Long duration'],kw:'astronaut human twin long duration year cardiovascular immune eyes',url:'https://doi.org/10.1126/science.aau8650'},
+  {acc:'',title:'ISS cabin air and temperature logs',summary:'Temperature, humidity and carbon dioxide (ppm) readings from the ISS cabin, logged every minute or every few minutes during rodent missions. Useful context for headaches and air quality.',tags:['Environment','ISS'],kw:'carbon dioxide co2 air temperature humidity cabin environment headache radiation',url:'https://osdr.nasa.gov/bio/'}
+ ],
+ shown:[],busy:0
+};
+function nasaEsc(s){return String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function nasaFlat(v){return Array.isArray(v)?v.filter(Boolean).join(', '):(v==null?'':String(v))}
+function nasaUrl(x){return x.url||(NASA.repo+'?q='+encodeURIComponent(x.acc||x.title)+'&data_source=cgene')}
+function nasaParse(json){
+ let hits=[];
+ if(json&&json.hits&&Array.isArray(json.hits.hits))hits=json.hits.hits;
+ else if(json&&Array.isArray(json.hits))hits=json.hits;
+ else if(json&&Array.isArray(json.results))hits=json.results;
+ return hits.map(h=>{
+  const s=(h&&h._source)||h||{};
+  const acc=nasaFlat(s['Accession']||s['Study Identifier']||s.accession||(h&&h._id));
+  const title=nasaFlat(s['Study Title']||s.title);
+  if(!title)return null;
+  return {acc:/^OSD-\d+$/i.test(acc)?acc.toUpperCase():'',title,summary:nasaFlat(s['Study Description']||s.description).replace(/\s+/g,' ').slice(0,240),tags:[nasaFlat(s.organism),nasaFlat(s['Flight Program']),nasaFlat(s['Project Type'])].filter(Boolean).slice(0,3),live:true};
+ }).filter(Boolean);
+}
+async function nasaFetch(term){
+ const ctl=new AbortController();const timer=setTimeout(()=>ctl.abort(),9000);
+ try{
+  const res=await fetch(NASA.api+'?term='+encodeURIComponent(term)+'&from=0&size=8&type=cgene',{signal:ctl.signal});
+  if(!res.ok)throw new Error('HTTP '+res.status);
+  const list=nasaParse(await res.json());
+  if(!list.length&&false)throw new Error('empty');
+  return list;
+ }finally{clearTimeout(timer)}
+}
+function nasaRender(list){
+ NASA.shown=list;
+ const box=document.getElementById('nasaResults');
+ box.innerHTML=list.length?list.map((x,i)=>`<article class="term-card nasa-card" style="display:flex;flex-direction:column;gap:8px"><div style="display:flex;gap:6px;flex-wrap:wrap">${x.live?'<span class="tag blue">Live from NASA</span>':'<span class="tag green">NASA OSDR</span>'}${x.acc?`<span class="tag blue">${nasaEsc(x.acc)}</span>`:''}${x.tags.map(t=>`<span class="tag">${nasaEsc(t)}</span>`).join('')}</div><h3 style="margin:0">${nasaEsc(x.title)}</h3><p style="margin:0">${nasaEsc(x.summary)}${x.summary.length>=240?'…':''}</p><div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:auto"><a class="btn" href="${nasaEsc(nasaUrl(x))}" target="_blank" rel="noopener noreferrer" style="text-decoration:none;display:inline-block">View on NASA</a><button class="btn" data-nasa-act="${i}">Ask the medical team</button></div></article>`).join(''):'<div class="empty">No studies found. Try another word, such as bone, muscle or radiation.</div>';
+}
+function nasaStatus(msg,warn){const el=document.getElementById('nasaStatus');el.textContent=msg;el.style.color=warn?'#f6cb78':''}
+async function runNasa(term,label){
+ term=(term||'').trim();
+ document.getElementById('nasaSearch').value=term;
+ const my=++NASA.busy;
+ if(!term){nasaStatus('Featured NASA datasets. Search a topic to look up more.');nasaRender(NASA.curated);return}
+ nasaStatus('Searching NASA Open Science Data Repository for “'+term+'”…');
+ try{
+  const live=await nasaFetch(term);
+  if(my!==NASA.busy)return;
+  nasaStatus(live.length?'Live results from NASA OSDR for “'+term+'”.':'NASA OSDR returned no studies for “'+term+'”.');
+  nasaRender(live);
+ }catch(e){
+  if(my!==NASA.busy)return;
+  const q=term.toLowerCase();
+  const local=NASA.curated.filter(x=>(x.title+' '+x.summary+' '+x.kw).toLowerCase().includes(q));
+  nasaStatus('Live NASA search is not reachable from this browser right now, so these are built-in NASA datasets'+(local.length?' that match “'+term+'”.':'. None match “'+term+'”, so all are shown.'),true);
+  nasaRender(local.length?local:NASA.curated);
+ }
+}
+function openNasa(term){showPage('nasa');runNasa(term)}
+function nasaInit(){
+ document.getElementById('nasaTopics').innerHTML=NASA.topics.map(t=>`<button class="btn" data-nasa-topic="${nasaEsc(t[1])}">${nasaEsc(t[0])}</button>`).join('');
+ document.getElementById('nasaForm').addEventListener('submit',e=>{e.preventDefault();runNasa(document.getElementById('nasaSearch').value)});
+ document.getElementById('nasaTopics').addEventListener('click',e=>{const b=e.target.closest('[data-nasa-topic]');if(b)runNasa(b.dataset.nasaTopic)});
+ document.getElementById('nasaResults').addEventListener('click',e=>{const b=e.target.closest('[data-nasa-act]');if(b)nasaAct(NASA.shown[+b.dataset.nasaAct])});
+ runNasa('');
+}
+function nasaShareText(x){return 'NASA dataset: '+x.title+(x.acc?' ('+x.acc+')':'')+' - '+nasaUrl(x)}
+function nasaAct(x){
+ if(!x)return;
+ showPage('chat');
+ const inp=document.getElementById('chatInput');
+ inp.value='I read about this NASA research: '+x.title+(x.acc?' ('+x.acc+')':'')+'. Can you explain how it applies to me?';
+ inp.focus();
+}
+nasaInit();
 let crew=[
  {name:"Alex Morgan",role:"Mission Specialist",id:"AC-001",photo:""},
  {name:"Jordan Lee",role:"Flight Engineer",id:"AC-002",photo:""},
@@ -642,20 +666,7 @@ $id('triageForm').addEventListener('submit',async e=>{
  finally{btn.disabled=false}
 });
 
-
-/* ---------- family connection: browser-local prototype only ---------- */
-const familyContacts={mom:{name:'Mum',avatar:'M',seed:[{from:'them',text:'Hi! We are all thinking about you. How is everything going?',time:'09:15'},{from:'me',text:'Hello Mum! I am doing well. Just wanted to say hi and let you know I miss you all. ❤️',time:'09:22'},{from:'them',text:'We miss you too. Everyone says hello. Remember to take your rest.',time:'09:24'}]},dad:{name:'Dad',avatar:'D',seed:[{from:'them',text:'Good morning! We are proud of you. How was your day?',time:'08:40'},{from:'me',text:'It was full, but productive. I will tell you more when I can. Give everyone my greetings.',time:'08:51'}]},group:{name:'Family Group',avatar:'♡',seed:[{from:'them',text:'Family group: Sending you greetings from home! ❤️',time:'Yesterday'},{from:'me',text:'Thank you everyone! It is good to hear from home. Love you all.',time:'Yesterday'}]}};
-let activeFamily='mom';
-function familyStorageKey(id){return 'astrocare360_family_demo_'+id}
-function getFamilyMessages(id){try{const saved=localStorage.getItem(familyStorageKey(id));return saved?JSON.parse(saved):familyContacts[id].seed.slice()}catch(e){return familyContacts[id].seed.slice()}}
-function saveFamilyMessages(id,msgs){try{localStorage.setItem(familyStorageKey(id),JSON.stringify(msgs))}catch(e){toast('This browser could not save the demo conversation.')}}
-function renderFamilyMessages(){const box=document.getElementById('familyMessages');if(!box)return;const msgs=getFamilyMessages(activeFamily);box.innerHTML='';msgs.forEach(m=>{const bubble=document.createElement('div');bubble.className='family-bubble'+(m.from==='me'?' mine':'');const body=document.createElement('div');body.textContent=m.text;const stamp=document.createElement('small');stamp.textContent=(m.from==='me'?'You':'Family')+' · '+m.time;bubble.append(body,stamp);box.appendChild(bubble)});box.scrollTop=box.scrollHeight}
-function selectFamilyContact(id){if(!familyContacts[id])return;activeFamily=id;document.querySelectorAll('[data-family-contact]').forEach(b=>b.classList.toggle('active',b.dataset.familyContact===id));document.getElementById('familyChatTitle').textContent=familyContacts[id].name;document.getElementById('familyAvatar').textContent=familyContacts[id].avatar;renderFamilyMessages()}
-document.querySelectorAll('[data-family-contact]').forEach(b=>b.addEventListener('click',()=>selectFamilyContact(b.dataset.familyContact)));
-document.getElementById('familyForm').addEventListener('submit',e=>{e.preventDefault();const input=document.getElementById('familyInput');const value=input.value.trim();if(!value)return;const msgs=getFamilyMessages(activeFamily);msgs.push({from:'me',text:value,time:new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit'})});saveFamilyMessages(activeFamily,msgs);input.value='';renderFamilyMessages();toast('Demo message saved on this device only. It was not delivered.')});
-document.querySelectorAll('[data-family-quick]').forEach(b=>b.addEventListener('click',()=>{document.getElementById('familyInput').value=b.dataset.familyQuick;document.getElementById('familyInput').focus()}));
-
-function onPageShown(id){if(id==='family'){renderFamilyMessages()}if(id==='chat'){markDoctorRead();setTimeout(()=>{const b=$id('messages');b.scrollTop=b.scrollHeight},50)}updateChatBadge()}
+function onPageShown(id){if(id==='chat'){markDoctorRead();setTimeout(()=>{const b=$id('messages');b.scrollTop=b.scrollHeight},50)}updateChatBadge()}
 
 /* start up */
 loadSavedProfile();renderCrew();applyProfileToUI();
